@@ -9,14 +9,7 @@
     <!-- 数据源选择器 -->
     <div class="flex justify-center">
       <div class="join">
-        <input
-          class="join-item btn"
-          type="radio"
-          name="source"
-          value=""
-          aria-label="全部"
-          v-model="selectedSource"
-          @change="fetchHotItems" />
+        
         <input
           v-for="source in sources"
           :key="source.id"
