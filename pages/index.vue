@@ -124,7 +124,7 @@ const selectedSource = ref("");
 const hotItems = ref([]);
 const sources = ref([]);
 const loading = ref(false);
-const error = ref("");
+const error = ref(null);
 
 // 获取数据源名称
 const getSourceName = (sourceId) => {
@@ -134,6 +134,7 @@ const getSourceName = (sourceId) => {
 
 // 格式化时间
 const formatTime = (date) => {
+  if (!date) return '';
   const d = new Date(date);
   const now = new Date();
   const diff = now.getTime() - d.getTime();
@@ -148,54 +149,50 @@ const formatTime = (date) => {
   return `${days}天前`;
 };
 
-// 获取数据源列表
-const fetchSources = async () => {
-  try {
-    const response = await $fetch("/api/sources");
-    if (response.success) {
-      sources.value = response.data;
-    }
-  } catch (err) {
-    console.error("Failed to fetch sources:", err);
-  }
-};
-
 // 获取热榜数据
 const fetchHotItems = async () => {
+  if (!selectedSource.value) return;
   loading.value = true;
-  error.value = "";
+  error.value = null;
 
   try {
-    const params = {};
-    if (selectedSource.value) {
-      params.source = selectedSource.value;
-    }
-
-    const response = await $fetch("/api/hot-list", { params });
-
-    if (response.success) {
-      hotItems.value = response.data;
-    } else {
-      error.value = "获取数据失败";
-    }
+    const data = await $fetch("/api/hot-list", { 
+      params: { id: selectedSource.value }
+    });
+    hotItems.value = data;
   } catch (err) {
     console.error("Failed to fetch hot items:", err);
-    error.value = "网络错误，请稍后重试";
+    error.value = err.data?.statusMessage || "获取数据失败，请稍后重试";
+    hotItems.value = [];
   } finally {
     loading.value = false;
   }
 };
+
+// 获取数据源列表
+const fetchSources = async () => {
+  try {
+    sources.value = await $fetch("/api/sources");
+    if (sources.value.length > 0 && !selectedSource.value) {
+      selectedSource.value = sources.value[0].id;
+    }
+  } catch (err) {
+    console.error("Failed to fetch sources:", err);
+    error.value = "获取数据源列表失败";
+  }
+};
+
 
 // 刷新热榜数据
 const refreshHotItems = async () => {
   await fetchHotItems();
 };
 
-// 服务端数据获取
-await Promise.all([fetchSources(), fetchHotItems()]);
-
-// 客户端数据刷新
+// 初始化逻辑
 onMounted(async () => {
-  await Promise.all([fetchSources(), fetchHotItems()]);
+  await fetchSources();
+  await fetchHotItems();
 });
+
+watch(selectedSource, fetchHotItems);
 </script>

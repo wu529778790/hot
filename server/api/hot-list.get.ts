@@ -1,24 +1,18 @@
-import { HotListService } from "../services/hot-list.service";
+import { getHotList } from '~/server/services/hot-list.service';
+import { sourcesMap } from '~/server/services/sources';
 
-export default defineEventHandler(async (event) => {
-  try {
-    const query = getQuery(event);
-    const source = query.source as string | undefined;
-    const limit = parseInt(query.limit as string) || 20;
+export default cachedEventHandler(async (event) => {
+  const query = getQuery(event);
+  const id = query.id as string;
 
-    const hotListService = new HotListService();
-    const hotItems = await hotListService.getHotItems(source, limit);
-
-    return {
-      success: true,
-      data: hotItems,
-      count: hotItems.length,
-    };
-  } catch (error) {
-    console.error("Error fetching hot list:", error);
+  if (!id || !sourcesMap.has(id)) {
     throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch hot list",
+      statusCode: 400,
+      statusMessage: 'Invalid source id',
     });
   }
+
+  return await getHotList(id);
+}, {
+  maxAge: 10 * 60, // 缓存 10 分钟
 });
