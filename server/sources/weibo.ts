@@ -1,3 +1,7 @@
+import type { HotItem } from '~/server/models/hot-item.model';
+import { myFetch } from '~/server/utils/fetch';
+import { proxyPicture } from '~/server/utils/proxy';
+
 export interface Root {
   ok: number
   data: Data
@@ -122,23 +126,21 @@ export interface Actionlog2 {
   ext: string
 }
 
-export default defineSource(async () => {
+export const getWeiboHotList = async (): Promise<HotItem[]> => {
   const url = "https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot"
   const res: Root = await myFetch(url)
   return res.data.cards[0].card_group
     .filter((k, i) => i !== 0 && k.desc && !k.actionlog?.ext.includes("ads_word"))
-    .map((k) => {
+    .map((k, index) => {
       return {
         id: k.desc!,
         title: k.desc!,
-        extra: {
-          icon: k.icon && {
-            url: proxyPicture(k.icon),
-            scale: 1.5,
-          },
-        },
         url: `https://s.weibo.com/weibo?q=${encodeURIComponent(`#${k.desc}#`)}`,
-        mobileUrl: k.scheme,
+        source: 'weibo',
+        rank: index + 1,
+        score: 0, // Weibo API doesn't provide a score
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     })
-})
+}
