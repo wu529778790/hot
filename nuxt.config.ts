@@ -16,17 +16,4 @@ export default defineNuxtConfig({
   alias: {
     "#": resolve(__dirname, "./server"),
   },
-  nitro: {
-    experimental: {
-      database: true,
-    },
-    database: {
-      default: {
-        connector: "better-sqlite3",
-        options: { 
-          database: process.env.NODE_ENV === 'test' ? ':memory:' : './db.sqlite',
-        },
-      },
-    },
-  },
 });
