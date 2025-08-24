@@ -1,3 +1,5 @@
+import { myFetch } from '~/server/utils/fetch';
+
 interface StockRes {
   data: {
     items:
@@ -15,7 +17,7 @@ interface StockRes {
 
 const hotstock = defineSource(async () => {
   const url = "https://stock.xueqiu.com/v5/stock/hot_stock/list.json?size=30&_type=10&type=10"
-  const cookie = (await $fetch.raw("https://xueqiu.com/hq")).headers.getSetCookie()
+  const cookie = (await myFetch.raw("https://xueqiu.com/hq")).headers.getSetCookie()
   const res: StockRes = await myFetch(url, {
     headers: {
       cookie: cookie.join("; "),

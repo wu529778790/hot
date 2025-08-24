@@ -1,5 +1,6 @@
 {
   "name": "nuxt-app",
+  "version": "0.0.1",
   "type": "module",
   "private": true,
   "scripts": {
@@ -7,19 +8,34 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare && pnpm run build:better-sqlite3",
+    "build:better-sqlite3": "cd node_modules/better-sqlite3 && pnpm install && pnpm run build-release",
+    "test": "vitest"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@types/cheerio": "^1.0.0",
+    "better-sqlite3": "^12.2.0",
     "cheerio": "^1.1.2",
+    "consola": "^3.4.2",
     "daisyui": "^5.0.50",
     "dayjs": "^1.11.13",
+    "db0": "^0.3.2",
     "defu": "^6.1.4",
+    "fast-xml-parser": "^5.2.5",
+    "iconv-lite": "^0.7.0",
+    "md5": "^2.3.0",
     "nuxt": "^4.0.3",
-    "ofetch": "^1.4.1",
     "tailwindcss": "3.4.3",
     "vue": "^3.5.18",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@nuxt/kit": "^4.0.3",
+    "@nuxt/test-utils": "^3.19.2",
+    "happy-dom": "^18.0.1",
+    "ofetch": "^1.4.1",
+    "vitest": "^3.2.4"
   }
 }

@@ -5,6 +5,37 @@ import { getBaiduHotList } from '~/server/sources/baidu';
 import { getBilibiliHotSearch, getBilibiliHotVideo, getBilibiliRanking } from '~/server/sources/bilibili';
 import { getGithubHotList } from '~/server/sources/github';
 import { getIthomeHotList } from '~/server/sources/ithome';
+import getCankaoxiaoxiHotList from '~/server/sources/cankaoxiaoxi';
+import getChongbuluoHotList from '~/server/sources/chongbuluo';
+import getDouyinHotList from '~/server/sources/douyin';
+import getFastbullHotList from '~/server/sources/fastbull';
+import getGelonghuiHotList from '~/server/sources/gelonghui';
+import getGhxiHotList from '~/server/sources/ghxi';
+import getHackernewsHotList from '~/server/sources/hackernews';
+import getHupuHotList from '~/server/sources/hupu';
+import getIfengHotList from '~/server/sources/ifeng';
+import getJin10HotList from '~/server/sources/jin10';
+import getJuejinHotList from '~/server/sources/juejin';
+import getKaopuHotList from '~/server/sources/kaopu';
+import getKuaishouHotList from '~/server/sources/kuaishou';
+import getLinuxdoHotList from '~/server/sources/linuxdo';
+import getMktnewsHotList from '~/server/sources/mktnews';
+import getNowcoderHotList from '~/server/sources/nowcoder';
+import getPcbetaHotList from '~/server/sources/pcbeta';
+import getProducthuntHotList from '~/server/sources/producthunt';
+import getSmzdmHotList from '~/server/sources/smzdm';
+import getSolidotHotList from '~/server/sources/solidot';
+import getSputniknewscnHotList from '~/server/sources/sputniknewscn';
+import getSspaiHotList from '~/server/sources/sspai';
+import getThepaperHotList from '~/server/sources/thepaper';
+import getTiebaHotList from '~/server/sources/tieba';
+import getToutiaoHotList from '~/server/sources/toutiao';
+import getV2exHotList from '~/server/sources/v2ex';
+import getWallstreetcnHotList from '~/server/sources/wallstreetcn';
+import getXueqiuHotList from '~/server/sources/xueqiu';
+import getZaobaoHotList from '~/server/sources/zaobao';
+import getClsHotList from '~/server/sources/cls';
+import getCoolapkHotList from '~/server/sources/coolapk';
 import type { HotItem } from '../models/hot-item.model';
 
 const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
@@ -17,6 +48,53 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   'bilibili-ranking': getBilibiliRanking,
   github: getGithubHotList,
   ithome: getIthomeHotList,
+  cankaoxiaoxi: getCankaoxiaoxiHotList,
+  chongbuluo: getChongbuluoHotList.chongbuluo,
+  'chongbuluo-hot': getChongbuluoHotList['chongbuluo-hot'],
+  'chongbuluo-latest': getChongbuluoHotList['chongbuluo-latest'],
+  douyin: getDouyinHotList,
+  fastbull: getFastbullHotList.fastbull,
+  'fastbull-express': getFastbullHotList['fastbull-express'],
+  'fastbull-news': getFastbullHotList['fastbull-news'],
+  gelonghui: getGelonghuiHotList,
+  ghxi: getGhxiHotList,
+  hackernews: getHackernewsHotList,
+  hupu: getHupuHotList,
+  ifeng: getIfengHotList,
+  jin10: getJin10HotList,
+  juejin: getJuejinHotList,
+  kaopu: getKaopuHotList,
+  kuaishou: getKuaishouHotList,
+  linuxdo: getLinuxdoHotList.linuxdo,
+  'linuxdo-latest': getLinuxdoHotList['linuxdo-latest'],
+  'linuxdo-hot': getLinuxdoHotList['linuxdo-hot'],
+  mktnews: getMktnewsHotList.mktnews,
+  'mktnews-flash': getMktnewsHotList['mktnews-flash'],
+  nowcoder: getNowcoderHotList,
+  'pcbeta-windows11': getPcbetaHotList['pcbeta-windows11'],
+  'pcbeta-windows': getPcbetaHotList['pcbeta-windows'],
+  producthunt: getProducthuntHotList,
+  smzdm: getSmzdmHotList,
+  solidot: getSolidotHotList,
+  sputniknewscn: getSputniknewscnHotList,
+  sspai: getSspaiHotList,
+  thepaper: getThepaperHotList,
+  tieba: getTiebaHotList,
+  toutiao: getToutiaoHotList,
+  v2ex: getV2exHotList.v2ex,
+  'v2ex-share': getV2exHotList['v2ex-share'],
+  wallstreetcn: getWallstreetcnHotList.wallstreetcn,
+  'wallstreetcn-quick': getWallstreetcnHotList['wallstreetcn-quick'],
+  'wallstreetcn-news': getWallstreetcnHotList['wallstreetcn-news'],
+  'wallstreetcn-hot': getWallstreetcnHotList['wallstreetcn-hot'],
+  xueqiu: getXueqiuHotList.xueqiu,
+  'xueqiu-hotstock': getXueqiuHotList['xueqiu-hotstock'],
+  zaobao: getZaobaoHotList,
+  cls: getClsHotList.cls,
+  'cls-telegraph': getClsHotList['cls-telegraph'],
+  'cls-depth': getClsHotList['cls-depth'],
+  'cls-hot': getClsHotList['cls-hot'],
+  coolapk: getCoolapkHotList.coolapk,
 };
 
 export async function getHotList(id: string): Promise<HotItem[]> {
