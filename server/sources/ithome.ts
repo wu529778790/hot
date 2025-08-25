@@ -1,37 +1,28 @@
-import { load } from 'cheerio';
 import type { HotItem } from '~/server/models/hot-item.model';
-import { myFetch } from '~/server/utils/fetch';
-import { parseRelativeDate } from '~/server/utils/date';
+import { rss2json } from '~/server/utils/rss2json';
 
 export async function getIthomeHotList(): Promise<HotItem[]> {
-  const response: any = await myFetch('https://www.ithome.com/list/');
-  const $ = load(response);
-  const $main = $('#list > div.fl > ul > li');
-  const news: HotItem[] = [];
-  $main.each((index, el) => {
-    const $el = $(el);
-    const $a = $el.find('a.t');
-    const url = $a.attr('href');
-    const title = $a.text();
-    const date = $(el).find('i').text();
-    if (url && title && date) {
-      const isAd =
-        url?.includes('lapin') ||
-        ['神券', '优惠', '补贴', '京东'].find(k => title.includes(k));
-      if (!isAd) {
-        const createdAt = parseRelativeDate(date, 'Asia/Shanghai');
-        news.push({
-          id: url,
-          title,
-          url,
-          source: 'ithome',
-          rank: index + 1,
-          score: 0,
-          createdAt: createdAt as Date,
-          updatedAt: new Date(),
-        });
-      }
-    }
+  const rssInfo = await rss2json('https://www.ithome.com/rss/');
+
+  if (!rssInfo || !rssInfo.items) {
+    // If the RSS feed fails, return an empty array or handle the error as needed.
+    console.error('Failed to fetch or parse ITHOME RSS feed.');
+    return [];
+  }
+
+  // Map the RSS items to the HotItem model.
+  const news: HotItem[] = rssInfo.items.map((item, index) => {
+    return {
+      id: item.id || item.link,
+      title: item.title,
+      url: item.link,
+      source: 'ithome',
+      rank: index + 1, // Rank based on order in the feed.
+      score: 0, // RSS feeds do not typically provide a 'hotness' score.
+      createdAt: new Date(item.created),
+      updatedAt: new Date(),
+    };
   });
-  return news.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+  return news;
 }
