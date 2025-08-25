@@ -42,11 +42,11 @@
 
         <!-- Content list -->
         <div v-else-if="hotItemsBySource[source.id] && hotItemsBySource[source.id].length > 0">
-          <ol class="list-none space-y-3">
+          <ol class="list-none space-y-2 max-h-96 overflow-y-auto">
             <li
               v-for="item in hotItemsBySource[source.id]"
               :key="item.id"
-              class="flex items-baseline p-2 rounded-md hover:bg-base-200"
+              class="flex items-baseline p-1 rounded-md hover:bg-base-300"
             >
               <span class="text-sm font-medium text-base-content/60 w-8 text-center">{{ item.rank }}</span>
               <a :href="item.url" target="_blank" rel="noopener noreferrer" class="ml-4 text-base-content hover:text-primary transition-colors">
