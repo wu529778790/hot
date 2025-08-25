@@ -127,21 +127,6 @@ export const sources: Source[] = [
     home: 'https://www.kuaishou.com',
   },
   {
-    id: 'linuxdo',
-    name: 'Linux Do',
-    home: 'https://linux.do',
-  },
-  {
-    id: 'linuxdo-latest',
-    name: 'Linux Do 最新',
-    home: 'https://linux.do',
-  },
-  {
-    id: 'linuxdo-hot',
-    name: 'Linux Do 热门',
-    home: 'https://linux.do',
-  },
-  {
     id: 'mktnews',
     name: 'MKT News',
     home: 'https://mktnews.net',

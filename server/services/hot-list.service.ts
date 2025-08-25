@@ -18,7 +18,7 @@ import getJin10HotList from '~/server/sources/jin10';
 import getJuejinHotList from '~/server/sources/juejin';
 import getKaopuHotList from '~/server/sources/kaopu';
 import getKuaishouHotList from '~/server/sources/kuaishou';
-import getLinuxdoHotList from '~/server/sources/linuxdo';
+
 import getMktnewsHotList from '~/server/sources/mktnews';
 import getNowcoderHotList from '~/server/sources/nowcoder';
 import getPcbetaHotList from '~/server/sources/pcbeta';
@@ -64,9 +64,6 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   jin10: getJin10HotList,
   juejin: getJuejinHotList,
   kuaishou: getKuaishouHotList,
-  linuxdo: getLinuxdoHotList.linuxdo,
-  'linuxdo-latest': getLinuxdoHotList['linuxdo-latest'],
-  'linuxdo-hot': getLinuxdoHotList['linuxdo-hot'],
   mktnews: getMktnewsHotList.mktnews,
   'mktnews-flash': getMktnewsHotList['mktnews-flash'],
   nowcoder: getNowcoderHotList,
