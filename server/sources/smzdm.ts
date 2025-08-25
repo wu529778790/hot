@@ -1,21 +1,26 @@
-import * as cheerio from "cheerio"
-import type { NewsItem } from "@shared/types"
+import type { HotItem } from '~/server/models/hot-item.model';
+import { rss2json } from '~/server/utils/rss2json';
 
-export default defineSource(async () => {
-  const baseURL = "https://post.smzdm.com/hot_1/"
-  const html: any = await myFetch(baseURL)
-  const $ = cheerio.load(html)
-  const $main = $("#feed-main-list .z-feed-title")
-  const news: NewsItem[] = []
-  $main.each((_, el) => {
-    const a = $(el).find("a")
-    const url = a.attr("href")!
-    const title = a.text()
-    news.push({
-      url,
-      title,
-      id: url,
-    })
-  })
-  return news
-})
+export async function getSmzdmHotList(): Promise<HotItem[]> {
+  const rssInfo = await rss2json('http://feed.smzdm.com');
+
+  if (!rssInfo || !rssInfo.items) {
+    console.error('Failed to fetch or parse SMZDM RSS feed.');
+    return [];
+  }
+
+  const news: HotItem[] = rssInfo.items.map((item, index) => {
+    return {
+      id: item.id || item.link,
+      title: item.title,
+      url: item.link,
+      source: 'smzdm',
+      rank: index + 1,
+      score: 0,
+      createdAt: new Date(item.created),
+      updatedAt: new Date(),
+    };
+  });
+
+  return news;
+}

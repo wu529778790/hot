@@ -1,28 +1,26 @@
-import * as cheerio from "cheerio"
-import type { NewsItem } from "@shared/types"
+import type { HotItem } from '~/server/models/hot-item.model';
+import { rss2json } from '~/server/utils/rss2json';
 
-export default defineSource(async () => {
-  const baseURL = "https://www.producthunt.com"
-  const html: any = await myFetch(baseURL)
-  const $ = cheerio.load(html)
-  const $main = $("[data-test=homepage-section-0] [data-test^=post-item]")
-  const news: NewsItem[] = []
-  $main.each((_, el) => {
-    const a = $(el).find("a").first()
-    const url = a.attr("href")
-    const title = $(el).find("a[data-test^=post-name]").text().replace(/^\d+\.\s*/, "")
-    const id = $(el).attr("data-test")?.replace("post-item-", "")
-    const vote = $(el).find("[data-test=vote-button]").text()
-    if (url && id && title) {
-      news.push({
-        url: `${baseURL}${url}`,
-        title,
-        id,
-        extra: {
-          info: `△︎ ${vote}`,
-        },
-      })
-    }
-  })
-  return news
-})
+export async function getProducthuntHotList(): Promise<HotItem[]> {
+  const rssInfo = await rss2json('https://www.producthunt.com/feed');
+
+  if (!rssInfo || !rssInfo.items) {
+    console.error('Failed to fetch or parse Product Hunt RSS feed.');
+    return [];
+  }
+
+  const news: HotItem[] = rssInfo.items.map((item, index) => {
+    return {
+      id: item.id || item.link,
+      title: item.title,
+      url: item.link,
+      source: 'producthunt',
+      rank: index + 1,
+      score: 0, // Vote count is not available in the RSS feed.
+      createdAt: new Date(item.created),
+      updatedAt: new Date(),
+    };
+  });
+
+  return news;
+}
