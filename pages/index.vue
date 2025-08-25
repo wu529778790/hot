@@ -1,206 +1,168 @@
 <template>
-  <div class="flex flex-row min-h-screen">
-    <!-- Sidebar for sources -->
-    <aside class="w-64 bg-base-200 p-4">
-      <h2 class="text-lg font-semibold mb-4">数据源</h2>
-      <ul class="space-y-2">
-        <li v-for="source in sources" :key="source.id">
-          <a
-            @click.prevent="selectedSource = source.id"
-            href="#"
-            class="block p-2 rounded-lg transition-colors"
-            :class="{
-              'bg-primary text-primary-content': selectedSource === source.id,
-              'hover:bg-base-300': selectedSource !== source.id,
-            }">
-            {{ source.name }}
-          </a>
-        </li>
-      </ul>
-    </aside>
+  <div class="p-6 bg-base-100 min-h-screen">
+    <!-- 页面标题 -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-extrabold text-primary mb-3">🔥 实时热榜</h1>
+      <p class="text-lg text-base-content/70">
+        聚合多个平台的热门内容，滚动加载
+      </p>
+    </div>
 
-    <!-- Main content -->
-    <main class="flex-1 p-6">
-      <div class="space-y-6">
-        <!-- 页面标题 -->
-        <div class="text-center">
-          <h1 class="text-4xl font-bold text-primary mb-2">
-            🔥 {{ selectedSourceName }}
-          </h1>
-          <p class="text-base-content/70">
-            聚合多个平台的热门内容，实时更新
-          </p>
+    <!-- 初始加载状态 (for source list) -->
+    <div v-if="initialLoading" class="flex justify-center pt-16">
+      <span class="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+
+    <!-- 初始错误状态 (for source list) -->
+    <div v-else-if="error" class="alert alert-error max-w-2xl mx-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <span>{{ error }}</span>
+       <button class="btn btn-sm" @click="reloadPage">重试</button>
+    </div>
+
+    <!-- 热榜版块 -->
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+      <section
+        v-for="source in sources"
+        :key="source.id"
+        :ref="el => (sourceElements[source.id] = el)"
+        :data-source-id="source.id"
+        class="min-h-[20rem] bg-base-200 p-6 rounded-box"
+        :id="source.id"
+      >
+        <h2 class="text-2xl font-bold mb-4 flex items-center">
+          <span v-if="source.icon" class="mr-3" v-html="source.icon"></span>
+          {{ source.name }}
+        </h2>
+
+        <!-- Per-section loading spinner -->
+        <div v-if="loadingStates[source.id]" class="flex justify-center items-center pt-16">
+          <span class="loading loading-spinner loading-md text-primary"></span>
         </div>
 
-        <!-- 加载状态 -->
-        <div v-if="loading" class="flex justify-center pt-16">
-          <span class="loading loading-spinner loading-lg"></span>
+        <!-- Content list -->
+        <div v-else-if="hotItemsBySource[source.id] && hotItemsBySource[source.id].length > 0">
+          <ol class="list-none space-y-3">
+            <li
+              v-for="item in hotItemsBySource[source.id]"
+              :key="item.id"
+              class="flex items-baseline p-2 rounded-md hover:bg-base-200"
+            >
+              <span class="text-sm font-medium text-base-content/60 w-8 text-center">{{ item.rank }}</span>
+              <a :href="item.url" target="_blank" rel="noopener noreferrer" class="ml-4 text-base-content hover:text-primary transition-colors">
+                {{ item.title }}
+              </a>
+            </li>
+          </ol>
         </div>
-
-        <!-- 错误状态 -->
-        <div v-else-if="error" class="alert alert-error">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="stroke-current shrink-0 h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>{{ error }}</span>
+        
+        <!-- Empty/Error state for this section -->
+        <div v-else-if="!loadingStates[source.id] && hotItemsBySource[source.id]" class="text-center py-16 text-base-content/60">
+          <p>(´･_･`) 未能加载此热榜</p>
         </div>
-
-        <!-- 热榜列表 -->
-        <div v-else-if="hotItems.length > 0" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <div
-            v-for="item in hotItems"
-            :key="item.id"
-            class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-            <div class="card-body">
-              <!-- 排名和分数 -->
-              <div class="flex justify-between items-start mb-2">
-                <div class="badge badge-primary badge-lg">{{ item.rank }}</div>
-                <div class="text-right">
-                  <div class="text-sm text-base-content/70">热度</div>
-                  <div class="font-bold text-primary">{{ item.score }}</div>
-                </div>
-              </div>
-
-              <!-- 标题 -->
-              <h2 class="card-title text-base">
-                <a
-                  :href="item.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="link link-hover">
-                  {{ item.title }}
-                </a>
-              </h2>
-
-              <!-- 来源和评论数 -->
-              <div class="flex justify-between items-center mt-3">
-                <div class="badge badge-outline">
-                  {{ getSourceName(item.source) }}
-                </div>
-                <div v-if="item.comments" class="text-sm text-base-content/70">
-                  💬 {{ item.comments }}
-                </div>
-              </div>
-
-              <!-- 更新时间 -->
-              <div class="text-xs text-base-content/50 mt-2">
-                {{ formatTime(item.updatedAt) }}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 空状态 -->
-        <div v-else class="text-center py-16">
-          <div class="text-6xl mb-4">🔍</div>
-          <h3 class="text-xl font-semibold mb-2">暂无数据</h3>
-          <p class="text-base-content/70">请稍后刷新或选择其他数据源</p>
-        </div>
-
-        <!-- 刷新按钮 -->
-        <div class="text-center mt-8">
-          <button
-            class="btn btn-primary"
-            @click="refreshHotItems"
-            :disabled="loading">
-            <span
-              v-if="loading"
-              class="loading loading-spinner loading-sm"></span>
-            刷新热榜
-          </button>
-        </div>
-      </div>
-    </main>
+      </section>
+    </div>
   </div>
 </template>
 
 <script setup>
-// 响应式数据
-const selectedSource = ref("");
-const hotItems = ref([]);
 const sources = ref([]);
-const loading = ref(false);
+const hotItemsBySource = ref({});
+const loadingStates = ref({});
+const initialLoading = ref(false);
 const error = ref(null);
+const sourceElements = ref({});
 
-// 获取数据源名称
-const getSourceName = (sourceId) => {
-  const source = sources.value.find((s) => s.id === sourceId);
-  return source?.name || sourceId;
-};
-
-const selectedSourceName = computed(() => {
-  if (!selectedSource.value) return "实时热榜";
-  return getSourceName(selectedSource.value);
-});
-
-// 格式化时间
 const formatTime = (date) => {
   if (!date) return '';
   const d = new Date(date);
   const now = new Date();
   const diff = now.getTime() - d.getTime();
-
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
-
   if (minutes < 1) return "刚刚";
   if (minutes < 60) return `${minutes}分钟前`;
   if (hours < 24) return `${hours}小时前`;
   return `${days}天前`;
 };
 
-// 获取热榜数据
-const fetchHotItems = async () => {
-  if (!selectedSource.value) return;
-  loading.value = true;
-  error.value = null;
-
+const fetchHotListForSource = async (source) => {
+  if (loadingStates.value[source.id] || (hotItemsBySource.value[source.id] && hotItemsBySource.value[source.id].length > 0)) {
+    return;
+  }
+  loadingStates.value = { ...loadingStates.value, [source.id]: true };
   try {
-    const data = await $fetch("/api/hot-list", { 
-      params: { id: selectedSource.value }
-    });
-    hotItems.value = data;
+    const items = await $fetch("/api/hot-list", { params: { id: source.id } });
+    hotItemsBySource.value = { ...hotItemsBySource.value, [source.id]: items || [] };
   } catch (err) {
-    console.error("Failed to fetch hot items:", err);
-    error.value = err.data?.statusMessage || "获取数据失败，请稍后重试";
-    hotItems.value = [];
+    console.error(`Failed to fetch hot list for ${source.id}:`, err);
+    hotItemsBySource.value = { ...hotItemsBySource.value, [source.id]: [] };
   } finally {
-    loading.value = false;
+    loadingStates.value = { ...loadingStates.value, [source.id]: false };
   }
 };
 
-// 获取数据源列表
-const fetchSources = async () => {
+let observer;
+const setupObserver = () => {
+  if (observer) {
+    observer.disconnect();
+  }
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const sourceId = entry.target.dataset.sourceId;
+          const source = sources.value.find((s) => s.id === sourceId);
+          if (source) {
+            fetchHotListForSource(source);
+            observer.unobserve(entry.target);
+          }
+        }
+      }
+    },
+    { rootMargin: "300px 0px 300px 0px" }
+  );
+
+  const elements = Object.values(sourceElements.value);
+  if (elements.length > 0) {
+    elements.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+  }
+};
+
+const loadInitialData = async () => {
+  initialLoading.value = true;
+  error.value = null;
   try {
     sources.value = await $fetch("/api/sources");
-    if (sources.value.length > 0 && !selectedSource.value) {
-      selectedSource.value = sources.value[0].id;
-    }
   } catch (err) {
     console.error("Failed to fetch sources:", err);
-    error.value = "获取数据源列表失败";
+    error.value = "获取数据源列表失败，请检查网络连接。";
+  } finally {
+    initialLoading.value = false;
   }
-};
+}
 
+const reloadPage = () => {
+    window.location.reload();
+}
 
-// 刷新热榜数据
-const refreshHotItems = async () => {
-  await fetchHotItems();
-};
-
-// 初始化逻辑
-onMounted(async () => {
-  await fetchSources();
+watch(sources, (newSources) => {
+  if (newSources && newSources.length > 0) {
+    nextTick(() => {
+      setupObserver();
+    });
+  }
 });
 
-watch(selectedSource, fetchHotItems);
+onMounted(loadInitialData);
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+});
 </script>
