@@ -309,14 +309,6 @@ export const originSources = {
     disable: "cf",
     home: "https://www.kuaishou.com",
   },
-  "kaopu": {
-    name: "靠谱新闻",
-    column: "world",
-    color: "gray",
-    interval: Time.Common,
-    desc: "不一定靠谱，多看多思考",
-    home: "https://kaopu.news/",
-  },
   "jin10": {
     name: "金十数据",
     column: "finance",

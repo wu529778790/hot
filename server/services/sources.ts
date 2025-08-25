@@ -122,11 +122,6 @@ export const sources: Source[] = [
     home: 'https://juejin.cn',
   },
   {
-    id: 'kaopu',
-    name: '靠谱',
-    home: 'https://www.kaopu.news',
-  },
-  {
     id: 'kuaishou',
     name: '快手',
     home: 'https://www.kuaishou.com',

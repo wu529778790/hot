@@ -390,14 +390,6 @@
     "color": "orange",
     "interval": 600000
   },
-  "kaopu": {
-    "name": "靠谱新闻",
-    "desc": "不一定靠谱，多看多思考",
-    "column": "world",
-    "home": "https://kaopu.news/",
-    "color": "gray",
-    "interval": 1800000
-  },
   "jin10": {
     "name": "金十数据",
     "type": "realtime",

@@ -63,7 +63,6 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   ifeng: getIfengHotList,
   jin10: getJin10HotList,
   juejin: getJuejinHotList,
-  kaopu: getKaopuHotList,
   kuaishou: getKuaishouHotList,
   linuxdo: getLinuxdoHotList.linuxdo,
   'linuxdo-latest': getLinuxdoHotList['linuxdo-latest'],
