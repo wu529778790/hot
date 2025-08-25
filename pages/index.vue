@@ -81,7 +81,7 @@
                 :href="item.url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="ml-4 text-base-content hover:text-primary transition-colors">
+                class="text-base-content hover:text-primary transition-colors">
                 {{ item.title }}
               </a>
             </li>
