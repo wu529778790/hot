@@ -14,7 +14,7 @@ import getCankaoxiaoxiHotList from "~/server/sources/cankaoxiaoxi";
 import getDouyinHotList from "~/server/sources/douyin";
 import getFastbullHotList from "~/server/sources/fastbull";
 import getGelonghuiHotList from "~/server/sources/gelonghui";
-import getGhxiHotList from "~/server/sources/ghxi";
+
 import getHackernewsHotList from "~/server/sources/hackernews";
 import getHupuHotList from "~/server/sources/hupu";
 import getIfengHotList from "~/server/sources/ifeng";
@@ -57,7 +57,7 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
 
   "fastbull-news": getFastbullHotList["fastbull-news"],
   gelonghui: getGelonghuiHotList,
-  ghxi: getGhxiHotList,
+
   hackernews: getHackernewsHotList,
   hupu: getHupuHotList,
   ifeng: getIfengHotList,

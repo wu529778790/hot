@@ -271,13 +271,6 @@ export const originSources = {
     type: "hottest",
     home: "https://www.baidu.com",
   },
-  ghxi: {
-    name: "果核剥壳",
-    column: "china",
-    color: "yellow",
-    home: "https://www.ghxi.com/",
-    disable: true,
-  },
 
   nowcoder: {
     name: "牛客",

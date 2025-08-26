@@ -73,11 +73,7 @@ export const sources: Source[] = [
     name: "格隆汇",
     home: "https://www.gelonghui.com",
   },
-  {
-    id: "ghxi",
-    name: "果核剥壳",
-    home: "https://www.ghxi.com",
-  },
+
   {
     id: "hackernews",
     name: "Hacker News",
