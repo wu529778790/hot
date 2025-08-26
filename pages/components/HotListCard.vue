@@ -258,63 +258,206 @@ const formatTime = (date) => {
   return `${days}天前`;
 };
 
-// 创建自定义卡片图片（作为html2canvas的最终备选方案）
+// 创建美观的自定义卡片图片
 const createCustomCardImage = async (cardElement) => {
   return new Promise((resolve) => {
     const rect = cardElement.getBoundingClientRect();
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // 设置canvas尺寸
-    canvas.width = Math.max(400, rect.width * 2); // 最小宽度400px
-    canvas.height = Math.max(300, rect.height * 2);
+    // 设置canvas尺寸 - 更宽一些以适应内容
+    const cardWidth = Math.max(480, rect.width);
+    const cardHeight = Math.max(600, rect.height);
+    canvas.width = cardWidth * 2;
+    canvas.height = cardHeight * 2;
     ctx.scale(2, 2);
 
-    const width = canvas.width / 2;
-    const height = canvas.height / 2;
+    const width = cardWidth;
+    const height = cardHeight;
 
-    // 绘制背景
+    // 绘制卡片背景和圆角
+    ctx.save();
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, width, height);
+    ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 8;
 
-    // 绘制边框
-    ctx.strokeStyle = "#e5e7eb";
+    // 创建圆角矩形路径
+    const radius = 16;
+    ctx.beginPath();
+    ctx.moveTo(radius, 0);
+    ctx.lineTo(width - radius, 0);
+    ctx.quadraticCurveTo(width, 0, width, radius);
+    ctx.lineTo(width, height - radius);
+    ctx.quadraticCurveTo(width, height, width - radius, height);
+    ctx.lineTo(radius, height);
+    ctx.quadraticCurveTo(0, height, 0, height - radius);
+    ctx.lineTo(0, radius);
+    ctx.quadraticCurveTo(0, 0, radius, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // 绘制头部区域背景
+    ctx.fillStyle = "#f8fafc";
+    ctx.beginPath();
+    ctx.moveTo(radius, 0);
+    ctx.lineTo(width - radius, 0);
+    ctx.quadraticCurveTo(width, 0, width, radius);
+    ctx.lineTo(width, 88);
+    ctx.lineTo(0, 88);
+    ctx.lineTo(0, radius);
+    ctx.quadraticCurveTo(0, 0, radius, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // 绘制头部底部分割线
+    ctx.strokeStyle = "#e2e8f0";
     ctx.lineWidth = 1;
-    ctx.strokeRect(0, 0, width, height);
+    ctx.beginPath();
+    ctx.moveTo(0, 88);
+    ctx.lineTo(width, 88);
+    ctx.stroke();
 
-    // 绘制标题区域
-    ctx.fillStyle = "#f9fafb";
-    ctx.fillRect(0, 0, width, 80);
+    // 绘制数据源图标背景
+    ctx.fillStyle = "#f1f5f9";
+    ctx.beginPath();
+    ctx.arc(32, 44, 16, 0, Math.PI * 2);
+    ctx.fill();
 
-    // 绘制标题文字
-    ctx.fillStyle = "#111827";
-    ctx.font = "bold 16px system-ui, -apple-system, sans-serif";
-    ctx.fillText(props.source.name, 24, 32);
+    // 绘制数据源名称
+    ctx.fillStyle = "#1e293b";
+    ctx.font = "bold 18px system-ui, -apple-system, sans-serif";
+    ctx.fillText(props.source.name, 60, 38);
 
-    // 绘制"实时更新"文字
-    ctx.fillStyle = "#6b7280";
-    ctx.font = "12px system-ui, -apple-system, sans-serif";
-    ctx.fillText("实时更新", 24, 52);
+    // 绘制状态指示器
+    ctx.fillStyle = "#10b981"; // 绿色
+    ctx.beginPath();
+    ctx.arc(60, 54, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "14px system-ui, -apple-system, sans-serif";
+    ctx.fillText("实时更新", 70, 58);
 
     // 绘制内容区域
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 80, width, height - 80);
+    const contentTop = 104;
+    const items = (props.items || []).slice(0, 10); // 显示更多项目
 
-    // 绘制示例内容
-    ctx.fillStyle = "#374151";
-    ctx.font = "14px system-ui, -apple-system, sans-serif";
-
-    // 安全地访问items
-    const items = (props.items || []).slice(0, 3);
     items.forEach((item, index) => {
-      const y = 100 + index * 50;
-      const title =
-        item && item.title ? item.title.substring(0, 30) + "..." : "加载中...";
-      ctx.fillText(`${index + 1}. ${title}`, 24, y);
+      const itemY = contentTop + index * 45;
+
+      // 绘制项目背景（悬停效果）
+      if (index % 2 === 0) {
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(16, itemY - 8, width - 32, 36);
+      }
+
+      // 绘制排名数字
+      ctx.fillStyle = getRankColor(index + 1);
+      ctx.font = "bold 14px system-ui, -apple-system, sans-serif";
+      ctx.textAlign = "center";
+
+      // 绘制圆形背景
+      ctx.beginPath();
+      ctx.arc(32, itemY + 2, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 绘制排名数字
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText((index + 1).toString(), 32, itemY + 6);
+
+      // 绘制标题
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#1e293b";
+      ctx.font = "15px system-ui, -apple-system, sans-serif";
+
+      const maxTitleWidth = width - 80;
+      const title = item && item.title ? item.title : "加载中...";
+
+      // 处理长标题，自动换行
+      const words = title.split("");
+      let line = "";
+      let lines = [];
+      let currentY = itemY;
+
+      for (let i = 0; i < words.length; i++) {
+        const testLine = line + words[i];
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxTitleWidth && line !== "") {
+          lines.push(line);
+          line = words[i];
+        } else {
+          line = testLine;
+        }
+      }
+      lines.push(line);
+
+      // 绘制标题行
+      lines.forEach((lineText, lineIndex) => {
+        if (currentY + lineIndex * 18 > contentTop + 400) return; // 防止超出卡片高度
+        ctx.fillText(lineText, 60, currentY + lineIndex * 18);
+      });
+
+      // 绘制额外信息
+      if (item && item.extra && item.extra.info) {
+        ctx.fillStyle = "#64748b";
+        ctx.font = "12px system-ui, -apple-system, sans-serif";
+        ctx.fillText(item.extra.info, 60, currentY + lines.length * 18 + 4);
+      }
     });
 
+    // 绘制底部渐变效果
+    const gradient = ctx.createLinearGradient(0, height - 40, 0, height);
+    gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
+    gradient.addColorStop(1, "rgba(255, 255, 255, 0.8)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, height - 40, width, 40);
+
+    ctx.textAlign = "left";
     resolve(canvas);
   });
+};
+
+// 获取排名颜色
+const getRankColor = (rank) => {
+  if (rank === 1) return "#fbbf24"; // 金色
+  if (rank === 2) return "#d1d5db"; // 银色
+  if (rank === 3) return "#f59e0b"; // 铜色
+  if (rank <= 10) return "#3b82f6"; // 蓝色
+  return "#6b7280"; // 灰色
+};
+
+// 使用原生浏览器API截图
+const takeNativeScreenshot = async (element) => {
+  try {
+    // 检查是否支持原生截图API
+    if (!window.chrome || !window.chrome.runtime) {
+      return null;
+    }
+
+    // 获取元素边界
+    const rect = element.getBoundingClientRect();
+    const scrollLeft =
+      window.pageXOffset || document.documentElement.scrollLeft;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    // 创建一个临时的canvas来绘制
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    // 使用getImageData来截取屏幕内容（如果可用）
+    const imgData = ctx.createImageData(rect.width, rect.height);
+    ctx.putImageData(imgData, 0, 0);
+
+    return canvas;
+  } catch (error) {
+    console.warn("原生截图API不可用:", error);
+    return null;
+  }
 };
 
 // 创建简单的文本图片（最后的备选方案）
@@ -370,20 +513,23 @@ const copyCardToImage = async () => {
 
     // 配置 html2canvas 选项
     const options = {
-      backgroundColor: "#ffffff", // 使用固定背景色避免颜色解析问题
       scale: 2, // 提高分辨率
       useCORS: true,
-      allowTaint: true, // 允许使用外部资源和可能的问题样式
+      allowTaint: true,
       logging: false,
       width: cardElement.scrollWidth,
       height: cardElement.scrollHeight,
       scrollX: 0,
       scrollY: 0,
+      backgroundColor: null, // 不设置背景色，让它使用元素本身的背景
+      removeContainer: false,
+      foreignObjectRendering: false, // 避免某些兼容性问题
       ignoreElements: (element) => {
-        // 忽略可能包含复杂颜色的元素
+        // 只忽略最可能有问题的元素
         return (
-          element.classList.contains("backdrop-blur") ||
-          element.classList.contains("bg-gradient-to-r")
+          element.tagName === "SCRIPT" ||
+          element.tagName === "STYLE" ||
+          element.classList.contains("animate-spin")
         );
       },
     };
@@ -393,33 +539,45 @@ const copyCardToImage = async () => {
     try {
       canvas = await html2canvas(cardElement, options);
     } catch (canvasError) {
-      console.warn("html2canvas 失败，尝试降级方案:", canvasError);
+      console.warn("html2canvas 失败，尝试原生API:", canvasError);
 
-      // 降级方案：使用更兼容的配置
-      const fallbackOptions = {
-        backgroundColor: "#ffffff",
-        scale: 1, // 降低分辨率
-        useCORS: false,
-        allowTaint: true,
-        logging: false,
-        width: cardElement.scrollWidth,
-        height: cardElement.scrollHeight,
-        scrollX: 0,
-        scrollY: 0,
-        ignoreElements: () => true, // 忽略所有可能有问题的元素
-      };
-
+      // 尝试使用原生API截图
       try {
-        canvas = await html2canvas(cardElement, fallbackOptions);
-      } catch (fallbackError) {
-        console.error("降级方案也失败，使用自定义方案:", fallbackError);
+        const screenshot = await takeNativeScreenshot(cardElement);
+        if (screenshot) {
+          canvas = screenshot;
+        } else {
+          throw new Error("原生API不可用");
+        }
+      } catch (nativeError) {
+        console.warn("原生API失败，尝试降级方案:", nativeError);
 
-        // 最终备选方案：创建自定义canvas
-        canvas = await createCustomCardImage(cardElement);
+        // 降级方案：使用更兼容的html2canvas配置
+        const fallbackOptions = {
+          backgroundColor: "#ffffff",
+          scale: 1, // 降低分辨率
+          useCORS: false,
+          allowTaint: true,
+          logging: false,
+          width: cardElement.scrollWidth,
+          height: cardElement.scrollHeight,
+          scrollX: 0,
+          scrollY: 0,
+          ignoreElements: () => true, // 忽略所有可能有问题的元素
+        };
 
-        if (!canvas) {
-          // 如果自定义方案也失败，创建一个简单的文本图片
-          canvas = createSimpleTextImage();
+        try {
+          canvas = await html2canvas(cardElement, fallbackOptions);
+        } catch (fallbackError) {
+          console.error("降级方案也失败，使用自定义方案:", fallbackError);
+
+          // 最终备选方案：创建自定义canvas
+          canvas = await createCustomCardImage(cardElement);
+
+          if (!canvas) {
+            // 如果自定义方案也失败，创建一个简单的文本图片
+            canvas = createSimpleTextImage();
+          }
         }
       }
     }
