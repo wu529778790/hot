@@ -268,9 +268,11 @@ const createCustomCardImage = async (cardElement) => {
     // 设置canvas尺寸 - 适中的宽度，动态计算高度
     const cardWidth = Math.min(420, Math.max(380, rect.width));
     const itemsCount = Math.max(1, (props.items || []).length); // 至少显示1个项目
-    const displayItems = Math.min(itemsCount, 8); // 最多显示8个项目
-    const estimatedHeight = 140 + displayItems * 48 + 40; // 头部 + 项目 + 底部
-    const cardHeight = Math.max(400, Math.min(estimatedHeight, 600)); // 限制高度范围
+    const displayItems = itemsCount; // 显示所有项目
+
+    // 预估高度：头部120px + 项目数量*40px + 底部50px
+    const estimatedHeight = 120 + displayItems * 40 + 50;
+    const cardHeight = Math.max(400, Math.min(estimatedHeight, 1500)); // 限制最大高度为1500px
     canvas.width = cardWidth * 2;
     canvas.height = cardHeight * 2;
     ctx.scale(2, 2);
@@ -348,8 +350,10 @@ const createCustomCardImage = async (cardElement) => {
     const contentTop = 104;
     const items = (props.items || []).slice(0, displayItems); // 显示实际数量的项目
 
+    let currentY = contentTop; // 动态Y坐标
+
     items.forEach((item, index) => {
-      const itemY = contentTop + index * 48; // 增加行间距
+      const itemY = currentY; // 使用动态Y坐标
 
       // 绘制项目背景（悬停效果）
       if (index % 2 === 0) {
@@ -380,27 +384,43 @@ const createCustomCardImage = async (cardElement) => {
       const title = item && item.title ? item.title : "加载中...";
 
       // 处理长标题，自动换行
-      const words = title.split("");
-      let line = "";
       let lines = [];
       const lineHeight = 15; // 行高
 
-      for (let i = 0; i < words.length; i++) {
-        const testLine = line + words[i];
-        const metrics = ctx.measureText(testLine);
-        if (metrics.width > maxTitleWidth && line !== "") {
-          lines.push(line);
-          line = words[i];
-        } else {
-          line = testLine;
+      // 使用更简单的换行逻辑：按字符分割
+      if (ctx.measureText(title).width <= maxTitleWidth) {
+        // 标题不超长，直接使用
+        lines = [title];
+      } else {
+        // 需要换行
+        let currentLine = "";
+        for (let i = 0; i < title.length; i++) {
+          const char = title[i];
+          const testLine = currentLine + char;
+          const metrics = ctx.measureText(testLine);
+
+          if (metrics.width > maxTitleWidth && currentLine !== "") {
+            lines.push(currentLine);
+            currentLine = char;
+          } else {
+            currentLine = testLine;
+          }
+        }
+
+        if (currentLine !== "") {
+          lines.push(currentLine);
+        }
+
+        // 限制最多3行
+        if (lines.length > 3) {
+          lines = lines.slice(0, 3);
+          lines[2] = lines[2].substring(0, lines[2].length - 1) + "...";
         }
       }
-      lines.push(line);
 
       // 绘制标题行 - 与序号对齐
       lines.forEach((lineText, lineIndex) => {
         const titleY = itemY + 10 + lineIndex * lineHeight; // 与序号Y坐标对齐
-        if (titleY > contentTop + 400) return; // 防止超出卡片高度
         ctx.fillText(lineText, 42, titleY); // 序号右侧开始绘制标题
       });
 
@@ -410,6 +430,11 @@ const createCustomCardImage = async (cardElement) => {
         ctx.font = "10px system-ui, -apple-system, sans-serif";
         const infoY = itemY + 10 + lines.length * lineHeight + 3;
         ctx.fillText(item.extra.info, 42, infoY);
+        // 更新Y坐标，为额外信息留出空间
+        currentY = infoY + 12;
+      } else {
+        // 更新Y坐标，为下一项目留出空间
+        currentY = itemY + 10 + Math.max(lines.length * lineHeight, 18) + 8;
       }
     });
 
@@ -611,7 +636,25 @@ const copyCardToImage = async () => {
           if (window.$toast) {
             window.$toast.success(`${props.source.name} 卡片已复制到剪贴板`);
           } else {
-            alert(`${props.source.name} 卡片已复制到剪贴板`);
+            // 降级到简单的提示
+            const notification = document.createElement("div");
+            notification.textContent = `${props.source.name} 卡片已复制到剪贴板`;
+            notification.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: #10b981;
+              color: white;
+              padding: 12px 16px;
+              border-radius: 8px;
+              font-size: 14px;
+              z-index: 9999;
+              animation: fadeInOut 3s ease-in-out;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+              document.body.removeChild(notification);
+            }, 3000);
           }
         } catch (clipboardError) {
           console.error("复制到剪贴板失败:", clipboardError);
@@ -631,7 +674,25 @@ const copyCardToImage = async () => {
           if (window.$toast) {
             window.$toast.info("图片已下载到本地");
           } else {
-            alert("图片已下载到本地");
+            // 降级到简单的提示
+            const notification = document.createElement("div");
+            notification.textContent = "图片已下载到本地";
+            notification.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: #3b82f6;
+              color: white;
+              padding: 12px 16px;
+              border-radius: 8px;
+              font-size: 14px;
+              z-index: 9999;
+              animation: fadeInOut 3s ease-in-out;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+              document.body.removeChild(notification);
+            }, 3000);
           }
         }
       },
@@ -644,8 +705,49 @@ const copyCardToImage = async () => {
     if (window.$toast) {
       window.$toast.error("生成图片失败: " + error.message);
     } else {
-      alert("生成图片失败: " + error.message);
+      // 降级到简单的提示
+      const notification = document.createElement("div");
+      notification.textContent = "生成图片失败: " + error.message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ef4444;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        z-index: 9999;
+        animation: fadeInOut 3s ease-in-out;
+        max-width: 300px;
+        word-wrap: break-word;
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 3000);
     }
   }
 };
 </script>
+
+<style scoped>
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+</style>
