@@ -47,12 +47,11 @@ export type SourceID = {
     : ConstSources[Key] extends { sub?: infer SubSource }
     ?
         | {
-            // @ts-expect-error >_<
             [SubKey in keyof SubSource]: SubSource[SubKey] extends {
               disable?: true;
             }
               ? never
-              : `${Key}-${SubKey}`;
+              : `${Key & string}-${SubKey & string}`;
           }[keyof SubSource]
         | Key
     : Key;
@@ -62,8 +61,8 @@ export type AllSourceID = {
   [Key in MainSourceID]: ConstSources[Key] extends { sub?: infer SubSource }
     ?
         | keyof {
-            // @ts-expect-error >_<
-            [SubKey in keyof SubSource as `${Key}-${SubKey}`]: never;
+            [SubKey in keyof SubSource as `${Key & string}-${SubKey &
+              string}`]: never;
           }
         | Key
     : Key;

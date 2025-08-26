@@ -23,6 +23,9 @@ export default defineSource(async () => {
 
     const [, path, title] = match;
 
+    // 确保 path 和 title 不为 undefined
+    if (!path || !title) continue;
+
     // 构建完整URL
     const url = `https://bbs.hupu.com${path}`;
 

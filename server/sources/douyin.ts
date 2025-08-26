@@ -30,8 +30,8 @@ export default defineSource({
       title: k.word,
       url: `https://www.douyin.com/hot/${k.sentence_id}`,
       extra: {
-        hotValue: k.hot_value,
-        eventTime: k.event_time,
+        info: `热度: ${k.hot_value}`,
+        date: k.event_time,
       },
     }));
   },

@@ -1,5 +1,5 @@
-import type { NewsItem } from "@shared/types"
-import type { CacheInfo } from "../types"
+import type { NewsItem, SourceID } from "@shared/types";
+import type { CacheInfo } from "../types";
 
 const inMemoryCache = new Map<string, CacheInfo>();
 
@@ -11,11 +11,11 @@ export class Cache {
 
   async set(key: string, value: NewsItem[]) {
     const now = Date.now();
-    inMemoryCache.set(key, { id: key, items: value, updated: now });
+    inMemoryCache.set(key, { id: key as SourceID, items: value, updated: now });
     logger.success(`set ${key} in-memory cache`);
   }
 
-  async get(key: string): Promise<CacheInfo | undefined > {
+  async get(key: string): Promise<CacheInfo | undefined> {
     const cache = inMemoryCache.get(key);
     if (cache) {
       logger.success(`get ${key} in-memory cache`);

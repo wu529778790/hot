@@ -1,17 +1,17 @@
-import type { NewsItem } from "@shared/types"
+import type { NewsItem } from "@shared/types";
 
 export default defineSource(async () => {
-  const html: string = await myFetch("https://www.ifeng.com/")
-  const regex = /var\s+allData\s*=\s*(\{[\s\S]*?\});/
-  const match = regex.exec(html)
-  const news: NewsItem[] = []
-  if (match) {
-    const realData = JSON.parse(match[1])
+  const html: string = await myFetch("https://www.ifeng.com/");
+  const regex = /var\s+allData\s*=\s*(\{[\s\S]*?\});/;
+  const match = regex.exec(html);
+  const news: NewsItem[] = [];
+  if (match && match[1]) {
+    const realData = JSON.parse(match[1]);
     const rawNews = realData.hotNews1 as {
-      url: string
-      title: string
-      newsTime: string
-    }[]
+      url: string;
+      title: string;
+      newsTime: string;
+    }[];
     rawNews.forEach((hotNews) => {
       news.push({
         id: hotNews.url,
@@ -20,8 +20,8 @@ export default defineSource(async () => {
         extra: {
           date: hotNews.newsTime,
         },
-      })
-    })
+      });
+    });
   }
-  return news
-})
+  return news;
+});

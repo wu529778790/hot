@@ -1,4 +1,4 @@
-import type { HotItem } from "~/server/models/hot-item.model";
+import type { NewsItem } from "@shared/types";
 import { myFetch } from "~/server/utils/fetch";
 import { logger } from "~/server/utils/logger";
 
@@ -166,7 +166,7 @@ export default defineSource({
             `#${k.desc}#`
           )}`,
           extra: {
-            rank: index + 1,
+            info: `排名: ${index + 1}`,
           },
         }));
     } catch (error) {

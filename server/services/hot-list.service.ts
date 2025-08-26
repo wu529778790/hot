@@ -37,9 +37,9 @@ import getXueqiuHotList from "~/server/sources/xueqiu";
 import getZaobaoHotList from "~/server/sources/zaobao";
 
 import getCoolapkHotList from "~/server/sources/coolapk";
-import type { HotItem } from "../models/hot-item.model";
+import type { NewsItem } from "@shared/types";
 
-const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
+const fetcherMap: Record<string, () => Promise<NewsItem[]>> = {
   weibo: getWeiboHotList.weibo!,
   zhihu: getZhihuHotList,
   "36kr": get36krHotList,
@@ -84,7 +84,7 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   coolapk: getCoolapkHotList.coolapk!,
 };
 
-export async function getHotList(id: string): Promise<HotItem[]> {
+export async function getHotList(id: string): Promise<NewsItem[]> {
   const fetcher = fetcherMap[id];
   if (!fetcher) {
     throw new Error("Invalid source id");
