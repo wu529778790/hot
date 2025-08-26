@@ -85,7 +85,12 @@ const fetchHotListForSource = async (source, isRefresh = false) => {
 
   loadingStates.value = { ...loadingStates.value, [source.id]: true };
   try {
-    const items = await $fetch("/api/hot-list", { params: { id: source.id } });
+    const params = { id: source.id };
+    // 如果是刷新操作，添加refresh参数强制重新获取数据
+    if (isRefresh) {
+      params.refresh = "true";
+    }
+    const items = await $fetch("/api/hot-list", { params });
     hotItemsBySource.value = {
       ...hotItemsBySource.value,
       [source.id]: items || [],
