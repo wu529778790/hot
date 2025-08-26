@@ -1,5 +1,6 @@
 import type { HotItem } from "~/server/models/hot-item.model";
 import { myFetch } from "~/server/utils/fetch";
+import { logger } from "~/server/utils/logger";
 
 export interface Root {
   ok: number;
@@ -127,20 +128,49 @@ export interface Actionlog2 {
 
 export default defineSource({
   weibo: async () => {
-    const url =
-      "https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot";
-    const res: Root = await myFetch(url);
-    return res.data.cards[0].card_group
-      .filter(
-        (k, i) => i !== 0 && k.desc && !k.actionlog?.ext.includes("ads_word")
-      )
-      .map((k, index) => ({
-        id: k.desc!,
-        title: k.desc!,
-        url: `https://s.weibo.com/weibo?q=${encodeURIComponent(`#${k.desc}#`)}`,
-        extra: {
-          rank: index + 1,
+    try {
+      // 首先访问微博主页获取Cookie
+      const homePage = await myFetch.raw('https://m.weibo.cn/');
+      const cookies = homePage.headers.getSetCookie();
+      
+      const url =
+        "https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot";
+      
+      const res: Root = await myFetch(url, {
+        headers: {
+          'Cookie': cookies.join('; '),
+          'Referer': 'https://m.weibo.cn/',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json, text/plain, */*',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive',
+          'Sec-Fetch-Dest': 'empty',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Site': 'same-origin',
         },
-      }));
+      });
+      
+      if (!res.data?.cards?.[0]?.card_group) {
+        throw new Error('微博API返回数据格式异常');
+      }
+      
+      return res.data.cards[0].card_group
+        .filter(
+          (k, i) => i !== 0 && k.desc && !k.actionlog?.ext.includes("ads_word")
+        )
+        .map((k, index) => ({
+          id: k.desc!,
+          title: k.desc!,
+          url: `https://s.weibo.com/weibo?q=${encodeURIComponent(`#${k.desc}#`)}`,
+          extra: {
+            rank: index + 1,
+          },
+        }));
+    } catch (error) {
+      logger.error('微博热搜获取失败:', error);
+      // 返回空数组而不是抛出错误，避免影响其他数据源
+      return [];
+    }
   },
 });
