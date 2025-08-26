@@ -76,11 +76,7 @@ export const sources: Source[] = [
     name: "FastBull",
     home: "https://www.fastbull.com",
   },
-  {
-    id: "fastbull-express",
-    name: "FastBull快讯",
-    home: "https://www.fastbull.com",
-  },
+
   {
     id: "fastbull-news",
     name: "FastBull新闻",

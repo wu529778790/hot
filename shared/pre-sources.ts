@@ -220,11 +220,6 @@ export const originSources = {
     home: "https://www.fastbull.cn",
     column: "finance",
     sub: {
-      express: {
-        title: "快讯",
-        type: "realtime",
-        interval: Time.Realtime,
-      },
       news: {
         title: "头条",
         interval: Time.Common,
