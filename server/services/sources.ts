@@ -135,11 +135,6 @@ export const sources: Source[] = [
   },
 
   {
-    id: "smzdm",
-    name: "什么值得买",
-    home: "https://post.smzdm.com/hot_1/",
-  },
-  {
     id: "solidot",
     name: "Solidot",
     home: "https://www.solidot.org",
@@ -169,16 +164,7 @@ export const sources: Source[] = [
     name: "今日头条",
     home: "https://www.toutiao.com",
   },
-  {
-    id: "v2ex",
-    name: "V2EX",
-    home: "https://www.v2ex.com",
-  },
-  {
-    id: "v2ex-share",
-    name: "V2EX 分享",
-    home: "https://www.v2ex.com",
-  },
+
   {
     id: "wallstreetcn",
     name: "华尔街见闻",

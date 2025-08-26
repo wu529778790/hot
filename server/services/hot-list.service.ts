@@ -26,14 +26,13 @@ import getKuaishouHotList from "~/server/sources/kuaishou";
 import getNowcoderHotList from "~/server/sources/nowcoder";
 import getPcbetaHotList from "~/server/sources/pcbeta";
 
-import { getSmzdmHotList } from "~/server/sources/smzdm";
 import getSolidotHotList from "~/server/sources/solidot";
 import getSputniknewscnHotList from "~/server/sources/sputniknewscn";
 import getSspaiHotList from "~/server/sources/sspai";
 import getThepaperHotList from "~/server/sources/thepaper";
 import getTiebaHotList from "~/server/sources/tieba";
 import getToutiaoHotList from "~/server/sources/toutiao";
-import getV2exHotList from "~/server/sources/v2ex";
+
 import getWallstreetcnHotList from "~/server/sources/wallstreetcn";
 import getXueqiuHotList from "~/server/sources/xueqiu";
 import getZaobaoHotList from "~/server/sources/zaobao";
@@ -71,15 +70,13 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   nowcoder: getNowcoderHotList,
   "pcbeta-windows11": getPcbetaHotList["pcbeta-windows11"],
 
-  smzdm: getSmzdmHotList,
   solidot: getSolidotHotList,
   sputniknewscn: getSputniknewscnHotList,
   sspai: getSspaiHotList,
   thepaper: getThepaperHotList,
   tieba: getTiebaHotList,
   toutiao: getToutiaoHotList,
-  v2ex: getV2exHotList.v2ex,
-  "v2ex-share": getV2exHotList["v2ex-share"],
+
   wallstreetcn: getWallstreetcnHotList.wallstreetcn,
   "wallstreetcn-quick": getWallstreetcnHotList["wallstreetcn-quick"],
   "wallstreetcn-news": getWallstreetcnHotList["wallstreetcn-news"],

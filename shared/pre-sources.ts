@@ -283,14 +283,7 @@ export const originSources = {
     home: "https://www.ghxi.com/",
     disable: true,
   },
-  smzdm: {
-    name: "什么值得买",
-    column: "china",
-    color: "red",
-    type: "hottest",
-    home: "https://www.smzdm.com",
-    disable: true,
-  },
+
   nowcoder: {
     name: "牛客",
     column: "china",

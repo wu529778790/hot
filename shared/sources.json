@@ -1,21 +1,4 @@
 {
-  "v2ex": {
-    "redirect": "v2ex-share",
-    "name": "V2EX",
-    "column": "tech",
-    "home": "https://v2ex.com/",
-    "color": "slate",
-    "interval": 600000,
-    "title": "最新分享"
-  },
-  "v2ex-share": {
-    "name": "V2EX",
-    "column": "tech",
-    "home": "https://v2ex.com/",
-    "color": "slate",
-    "interval": 600000,
-    "title": "最新分享"
-  },
   "zhihu": {
     "name": "知乎",
     "type": "hottest",
