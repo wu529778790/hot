@@ -10,7 +10,7 @@ import {
 import { getGithubHotList } from "~/server/sources/github";
 import { getIthomeHotList } from "~/server/sources/ithome";
 import getCankaoxiaoxiHotList from "~/server/sources/cankaoxiaoxi";
-import getChongbuluoHotList from "~/server/sources/chongbuluo";
+
 import getDouyinHotList from "~/server/sources/douyin";
 import getFastbullHotList from "~/server/sources/fastbull";
 import getGelonghuiHotList from "~/server/sources/gelonghui";
@@ -51,9 +51,7 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   github: getGithubHotList,
   ithome: getIthomeHotList,
   cankaoxiaoxi: getCankaoxiaoxiHotList,
-  chongbuluo: getChongbuluoHotList.chongbuluo,
-  "chongbuluo-hot": getChongbuluoHotList["chongbuluo-hot"],
-  "chongbuluo-latest": getChongbuluoHotList["chongbuluo-latest"],
+
   douyin: getDouyinHotList,
   fastbull: getFastbullHotList.fastbull,
 

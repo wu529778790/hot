@@ -51,21 +51,7 @@ export const sources: Source[] = [
     name: "参考消息",
     home: "http://www.cankaoxiaoxi.com/",
   },
-  {
-    id: "chongbuluo",
-    name: "冲部落",
-    home: "https://www.chongbuluo.com/",
-  },
-  {
-    id: "chongbuluo-hot",
-    name: "冲部落热门",
-    home: "https://www.chongbuluo.com/",
-  },
-  {
-    id: "chongbuluo-latest",
-    name: "冲部落最新",
-    home: "https://www.chongbuluo.com/",
-  },
+
   {
     id: "douyin",
     name: "抖音",

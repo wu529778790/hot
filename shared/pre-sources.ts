@@ -308,25 +308,6 @@ export const originSources = {
     title: "热点资讯",
     home: "https://www.ifeng.com",
   },
-  chongbuluo: {
-    name: "虫部落",
-    column: "china",
-    color: "green",
-    home: "https://www.chongbuluo.com",
-    sub: {
-      latest: {
-        title: "最新",
-        interval: Time.Common,
-        home: "https://www.chongbuluo.com/forum.php?mod=guide&view=newthread",
-      },
-      hot: {
-        title: "最热",
-        type: "hottest",
-        interval: Time.Common,
-        home: "https://www.chongbuluo.com/forum.php?mod=guide&view=hot",
-      },
-    },
-  },
 } as const satisfies Record<string, OriginSource>;
 
 export function genSources() {
