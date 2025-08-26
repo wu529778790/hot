@@ -265,9 +265,12 @@ const createCustomCardImage = async (cardElement) => {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // 设置canvas尺寸 - 更宽一些以适应内容
-    const cardWidth = Math.max(480, rect.width);
-    const cardHeight = Math.max(600, rect.height);
+    // 设置canvas尺寸 - 适中的宽度，动态计算高度
+    const cardWidth = Math.min(420, Math.max(380, rect.width));
+    const itemsCount = Math.max(1, (props.items || []).length); // 至少显示1个项目
+    const displayItems = Math.min(itemsCount, 8); // 最多显示8个项目
+    const estimatedHeight = 140 + displayItems * 48 + 40; // 头部 + 项目 + 底部
+    const cardHeight = Math.max(400, Math.min(estimatedHeight, 600)); // 限制高度范围
     canvas.width = cardWidth * 2;
     canvas.height = cardHeight * 2;
     ctx.scale(2, 2);
@@ -343,44 +346,44 @@ const createCustomCardImage = async (cardElement) => {
 
     // 绘制内容区域
     const contentTop = 104;
-    const items = (props.items || []).slice(0, 10); // 显示更多项目
+    const items = (props.items || []).slice(0, displayItems); // 显示实际数量的项目
 
     items.forEach((item, index) => {
-      const itemY = contentTop + index * 45;
+      const itemY = contentTop + index * 48; // 增加行间距
 
       // 绘制项目背景（悬停效果）
       if (index % 2 === 0) {
         ctx.fillStyle = "#f8fafc";
-        ctx.fillRect(16, itemY - 8, width - 32, 36);
+        ctx.fillRect(16, itemY - 8, width - 32, 40);
       }
 
       // 绘制排名数字
       ctx.fillStyle = getRankColor(index + 1);
-      ctx.font = "bold 14px system-ui, -apple-system, sans-serif";
+      ctx.font = "bold 12px system-ui, -apple-system, sans-serif";
       ctx.textAlign = "center";
 
       // 绘制圆形背景
       ctx.beginPath();
-      ctx.arc(32, itemY + 2, 12, 0, Math.PI * 2);
+      ctx.arc(24, itemY + 6, 9, 0, Math.PI * 2);
       ctx.fill();
 
       // 绘制排名数字
       ctx.fillStyle = "#ffffff";
-      ctx.fillText((index + 1).toString(), 32, itemY + 6);
+      ctx.fillText((index + 1).toString(), 24, itemY + 10);
 
       // 绘制标题
       ctx.textAlign = "left";
       ctx.fillStyle = "#1e293b";
-      ctx.font = "15px system-ui, -apple-system, sans-serif";
+      ctx.font = "13px system-ui, -apple-system, sans-serif";
 
-      const maxTitleWidth = width - 80;
+      const maxTitleWidth = width - 60; // 标题可用宽度
       const title = item && item.title ? item.title : "加载中...";
 
       // 处理长标题，自动换行
       const words = title.split("");
       let line = "";
       let lines = [];
-      let currentY = itemY;
+      const lineHeight = 15; // 行高
 
       for (let i = 0; i < words.length; i++) {
         const testLine = line + words[i];
@@ -394,26 +397,34 @@ const createCustomCardImage = async (cardElement) => {
       }
       lines.push(line);
 
-      // 绘制标题行
+      // 绘制标题行 - 与序号对齐
       lines.forEach((lineText, lineIndex) => {
-        if (currentY + lineIndex * 18 > contentTop + 400) return; // 防止超出卡片高度
-        ctx.fillText(lineText, 60, currentY + lineIndex * 18);
+        const titleY = itemY + 10 + lineIndex * lineHeight; // 与序号Y坐标对齐
+        if (titleY > contentTop + 400) return; // 防止超出卡片高度
+        ctx.fillText(lineText, 42, titleY); // 序号右侧开始绘制标题
       });
 
       // 绘制额外信息
-      if (item && item.extra && item.extra.info) {
+      if (item && item.extra && item.extra.info && lines.length > 0) {
         ctx.fillStyle = "#64748b";
-        ctx.font = "12px system-ui, -apple-system, sans-serif";
-        ctx.fillText(item.extra.info, 60, currentY + lines.length * 18 + 4);
+        ctx.font = "10px system-ui, -apple-system, sans-serif";
+        const infoY = itemY + 10 + lines.length * lineHeight + 3;
+        ctx.fillText(item.extra.info, 42, infoY);
       }
     });
 
     // 绘制底部渐变效果
-    const gradient = ctx.createLinearGradient(0, height - 40, 0, height);
+    const gradientHeight = 30;
+    const gradient = ctx.createLinearGradient(
+      0,
+      height - gradientHeight,
+      0,
+      height
+    );
     gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
-    gradient.addColorStop(1, "rgba(255, 255, 255, 0.8)");
+    gradient.addColorStop(1, "rgba(255, 255, 255, 0.6)");
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, height - 40, width, 40);
+    ctx.fillRect(0, height - gradientHeight, width, gradientHeight);
 
     ctx.textAlign = "left";
     resolve(canvas);
