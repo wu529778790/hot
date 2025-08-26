@@ -267,12 +267,11 @@ const createCustomCardImage = async (cardElement) => {
 
     // 设置canvas尺寸 - 适中的宽度，动态计算高度
     const cardWidth = Math.min(420, Math.max(380, rect.width));
-    const itemsCount = Math.max(1, (props.items || []).length); // 至少显示1个项目
-    const displayItems = itemsCount; // 显示所有项目
+    const displayItems = 10; // 固定复制前10条
 
-    // 预估高度：头部120px + 项目数量*40px + 底部50px
+    // 预估高度：头部120px + 10个项目*40px + 底部50px
     const estimatedHeight = 120 + displayItems * 40 + 50;
-    const cardHeight = Math.max(400, Math.min(estimatedHeight, 1500)); // 限制最大高度为1500px
+    const cardHeight = Math.max(400, Math.min(estimatedHeight, 700)); // 限制最大高度为700px
     canvas.width = cardWidth * 2;
     canvas.height = cardHeight * 2;
     ctx.scale(2, 2);
@@ -348,7 +347,7 @@ const createCustomCardImage = async (cardElement) => {
 
     // 绘制内容区域
     const contentTop = 104;
-    const items = (props.items || []).slice(0, displayItems); // 显示实际数量的项目
+    const items = (props.items || []).slice(0, 10); // 只复制前10条
 
     let currentY = contentTop; // 动态Y坐标
 
