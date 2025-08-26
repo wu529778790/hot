@@ -1,0 +1,94 @@
+name: Version Bump and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: "Version bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install -g semver
+
+      - name: Read current version
+        id: current-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Calculate new version
+        id: new-version
+        run: |
+          CURRENT_VERSION=${{ steps.current-version.outputs.version }}
+          VERSION_TYPE=${{ github.event.inputs.version_type }}
+          NEW_VERSION=$(semver $CURRENT_VERSION -i $VERSION_TYPE)
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update package.json
+        run: |
+          NEW_VERSION=${{ steps.new-version.outputs.version }}
+          sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$NEW_VERSION\"/" package.json
+
+      - name: Commit and push changes
+        run: |
+          NEW_VERSION=${{ steps.new-version.outputs.version }}
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add package.json
+          git commit -m "chore: bump version to $NEW_VERSION"
+          git push
+
+      - name: Create and push tag
+        run: |
+          NEW_VERSION=${{ steps.new-version.outputs.version }}
+          git tag "v$NEW_VERSION"
+          git push origin "v$NEW_VERSION"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.new-version.outputs.version }}
+          release_name: Release v${{ steps.new-version.outputs.version }}
+          body: |
+            ## Version ${{ steps.new-version.outputs.version }}
+
+            This is an automated release with version bump from ${{ steps.new-version.outputs.current }} to ${{ steps.new-version.outputs.version }}.
+
+            ### Docker Images (will be available after build completes)
+
+            **Docker Hub:**
+            ```bash
+            docker pull docker.io/${{ github.repository }}:v${{ steps.new-version.outputs.version }}
+            ```
+
+            **GitHub Container Registry:**
+            ```bash
+            docker pull ghcr.io/${{ github.repository }}:v${{ steps.new-version.outputs.version }}
+            ```
+          draft: false
+          prerelease: false

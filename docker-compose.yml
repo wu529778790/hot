@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  newshub:
+    image: newshub.shenzjd.com/newshub.shenzjd.com:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/sources"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - newshub-network
+
+networks:
+  newshub-network:
+    driver: bridge
+# 可选：添加 Nginx 反向代理
+#  nginx:
+#    image: nginx:alpine
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+#      - ./ssl:/etc/ssl/certs
+#    depends_on:
+#      - newshub
+#    restart: unless-stopped
+#    networks:
+#      - newshub-network

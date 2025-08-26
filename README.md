@@ -14,23 +14,63 @@
 
 在信息爆炸的时代，时间宝贵。「热榜」致力于为您节省时间，提升效率。我们不仅提供丰富的内容，更注重您的阅读体验，让您在简洁优雅的界面中，轻松获取最有价值的信息。
 
-## 🚀 立即体验
+## 🐳 Docker 部署
 
-### 轻松启动
+### 使用官方 Docker 镜像
 
-只需几步，即可拥有您的专属热榜应用：
-
-```bash
-pnpm install
-```
-
-### 开启您的热门之旅
+我们提供预构建的 Docker 镜像，您可以轻松部署：
 
 ```bash
-pnpm dev
+# 使用 Docker Hub 镜像
+docker run -p 3000:3000 newshub.shenzjd.com/newshub.shenzjd.com:latest
+
+# 使用 GitHub Container Registry 镜像
+docker run -p 3000:3000 ghcr.io/newshub.shenzjd.com/newshub.shenzjd.com:latest
 ```
 
-在浏览器中访问 <http://localhost:3000>，即刻开启您的热门内容探索之旅！
+### 使用特定版本
+
+```bash
+# Docker Hub
+docker run -p 3000:3000 newshub.shenzjd.com/newshub.shenzjd.com:v1.0.0
+
+# GitHub Container Registry
+docker run -p 3000:3000 ghcr.io/newshub.shenzjd.com/newshub.shenzjd.com:v1.0.0
+```
+
+### Docker Compose 部署
+
+创建 `docker-compose.yml` 文件：
+
+```yaml
+version: '3.8'
+services:
+  newshub:
+    image: newshub.shenzjd.com/newshub.shenzjd.com:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+```
+
+然后运行：
+
+```bash
+docker-compose up -d
+```
+
+### 本地构建 Docker 镜像
+
+如果您想本地构建 Docker 镜像：
+
+```bash
+# 构建镜像
+docker build -t newshub:latest .
+
+# 运行容器
+docker run -p 3000:3000 newshub:latest
+```
 
 ## 🌐 丰富的数据源
 
@@ -47,6 +87,44 @@ pnpm dev
 ## 🤝 贡献与交流
 
 我们欢迎所有对「热榜」感兴趣的朋友加入，共同打造更出色的产品。如果您有任何建议或想法，欢迎通过 GitHub 提交 Issue 或 Pull Request。
+
+## 🚀 自动发布
+
+本项目支持自动版本管理和 Docker 镜像发布：
+
+### 版本管理
+
+项目使用语义化版本控制，每次发布会自动递增版本号：
+
+- **补丁版本 (Patch)**: `0.0.1` → `0.0.2`
+- **次要版本 (Minor)**: `0.0.1` → `0.1.0`
+- **主要版本 (Major)**: `0.0.1` → `1.0.0`
+
+### Docker 镜像
+
+每次推送版本标签时，GitHub Actions 会自动：
+
+1. 构建多架构 Docker 镜像 (AMD64/ARM64)
+2. 推送到 Docker Hub 和 GitHub Container Registry
+3. 创建 GitHub Release
+4. 更新版本信息
+
+### 触发发布
+
+要发布新版本，请使用 GitHub Actions 中的 "Version Bump and Release" 工作流：
+
+1. 转到 Actions 标签页
+2. 选择 "Version Bump and Release" 工作流
+3. 点击 "Run workflow"
+4. 选择版本类型 (patch/minor/major)
+5. 点击 "Run workflow"
+
+工作流将自动：
+
+- 更新 `package.json` 中的版本号
+- 提交和推送更改
+- 创建版本标签
+- 触发 Docker 镜像构建和发布
 
 ## 📄 许可证
 
