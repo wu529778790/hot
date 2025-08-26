@@ -64,11 +64,6 @@ export const originSources = {
     column: "finance",
     home: "https://wallstreetcn.com/",
     sub: {
-      quick: {
-        type: "realtime",
-        interval: Time.Fast,
-        title: "快讯",
-      },
       news: {
         title: "最新",
         interval: Time.Common,

@@ -78,7 +78,7 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   toutiao: getToutiaoHotList,
 
   wallstreetcn: getWallstreetcnHotList.wallstreetcn,
-  "wallstreetcn-quick": getWallstreetcnHotList["wallstreetcn-quick"],
+
   "wallstreetcn-news": getWallstreetcnHotList["wallstreetcn-news"],
   "wallstreetcn-hot": getWallstreetcnHotList["wallstreetcn-hot"],
   xueqiu: getXueqiuHotList.xueqiu,

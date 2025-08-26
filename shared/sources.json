@@ -36,23 +36,13 @@
   },
 
   "wallstreetcn": {
-    "redirect": "wallstreetcn-quick",
+    "redirect": "wallstreetcn-news",
     "name": "华尔街见闻",
-    "type": "realtime",
     "column": "finance",
     "home": "https://wallstreetcn.com/",
     "color": "blue",
-    "interval": 300000,
-    "title": "快讯"
-  },
-  "wallstreetcn-quick": {
-    "name": "华尔街见闻",
-    "type": "realtime",
-    "column": "finance",
-    "home": "https://wallstreetcn.com/",
-    "color": "blue",
-    "interval": 300000,
-    "title": "快讯"
+    "interval": 1800000,
+    "title": "最新"
   },
   "wallstreetcn-news": {
     "name": "华尔街见闻",

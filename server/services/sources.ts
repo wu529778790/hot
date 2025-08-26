@@ -170,11 +170,7 @@ export const sources: Source[] = [
     name: "华尔街见闻",
     home: "https://wallstreetcn.com",
   },
-  {
-    id: "wallstreetcn-quick",
-    name: "华尔街见闻-快讯",
-    home: "https://wallstreetcn.com",
-  },
+
   {
     id: "wallstreetcn-news",
     name: "华尔街见闻-新闻",
