@@ -133,16 +133,7 @@ export const sources: Source[] = [
     name: "PC Beta (Win11)",
     home: "https://bbs.pcbeta.com",
   },
-  {
-    id: "pcbeta-windows",
-    name: "PC Beta (Win)",
-    home: "https://bbs.pcbeta.com",
-  },
-  {
-    id: "producthunt",
-    name: "Product Hunt",
-    home: "https://www.producthunt.com",
-  },
+
   {
     id: "smzdm",
     name: "什么值得买",
@@ -223,26 +214,7 @@ export const sources: Source[] = [
     name: "早报",
     home: "https://www.zaobao.com/realtime",
   },
-  {
-    id: "cls",
-    name: "财联社",
-    home: "https://www.cls.cn",
-  },
-  {
-    id: "cls-telegraph",
-    name: "财联社-电报",
-    home: "https://www.cls.cn",
-  },
-  {
-    id: "cls-depth",
-    name: "财联社-深度",
-    home: "https://www.cls.cn",
-  },
-  {
-    id: "cls-hot",
-    name: "财联社-热门",
-    home: "https://www.cls.cn",
-  },
+
   {
     id: "coolapk",
     name: "酷安",

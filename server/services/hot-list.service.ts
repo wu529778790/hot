@@ -25,7 +25,7 @@ import getKuaishouHotList from "~/server/sources/kuaishou";
 
 import getNowcoderHotList from "~/server/sources/nowcoder";
 import getPcbetaHotList from "~/server/sources/pcbeta";
-import { getProducthuntHotList } from "~/server/sources/producthunt";
+
 import { getSmzdmHotList } from "~/server/sources/smzdm";
 import getSolidotHotList from "~/server/sources/solidot";
 import getSputniknewscnHotList from "~/server/sources/sputniknewscn";
@@ -37,7 +37,7 @@ import getV2exHotList from "~/server/sources/v2ex";
 import getWallstreetcnHotList from "~/server/sources/wallstreetcn";
 import getXueqiuHotList from "~/server/sources/xueqiu";
 import getZaobaoHotList from "~/server/sources/zaobao";
-import getClsHotList from "~/server/sources/cls";
+
 import getCoolapkHotList from "~/server/sources/coolapk";
 import type { HotItem } from "../models/hot-item.model";
 
@@ -70,8 +70,7 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
 
   nowcoder: getNowcoderHotList,
   "pcbeta-windows11": getPcbetaHotList["pcbeta-windows11"],
-  "pcbeta-windows": getPcbetaHotList["pcbeta-windows"],
-  producthunt: getProducthuntHotList,
+
   smzdm: getSmzdmHotList,
   solidot: getSolidotHotList,
   sputniknewscn: getSputniknewscnHotList,
@@ -88,10 +87,7 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   xueqiu: getXueqiuHotList.xueqiu,
   "xueqiu-hotstock": getXueqiuHotList["xueqiu-hotstock"],
   zaobao: getZaobaoHotList,
-  cls: getClsHotList.cls,
-  "cls-telegraph": getClsHotList["cls-telegraph"],
-  "cls-depth": getClsHotList["cls-depth"],
-  "cls-hot": getClsHotList["cls-hot"],
+
   coolapk: getCoolapkHotList.coolapk,
 };
 

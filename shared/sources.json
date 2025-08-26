@@ -174,16 +174,7 @@
     "color": "red",
     "interval": 1800000
   },
-  "pcbeta": {
-    "redirect": "pcbeta-windows11",
-    "name": "远景论坛",
-    "type": "realtime",
-    "column": "tech",
-    "home": "https://bbs.pcbeta.com",
-    "color": "blue",
-    "interval": 300000,
-    "title": "Win11"
-  },
+
   "pcbeta-windows11": {
     "name": "远景论坛",
     "type": "realtime",
@@ -193,42 +184,7 @@
     "interval": 300000,
     "title": "Win11"
   },
-  "cls": {
-    "redirect": "cls-telegraph",
-    "name": "财联社",
-    "type": "realtime",
-    "column": "finance",
-    "home": "https://www.cls.cn",
-    "color": "red",
-    "interval": 300000,
-    "title": "电报"
-  },
-  "cls-telegraph": {
-    "name": "财联社",
-    "type": "realtime",
-    "column": "finance",
-    "home": "https://www.cls.cn",
-    "color": "red",
-    "interval": 300000,
-    "title": "电报"
-  },
-  "cls-depth": {
-    "name": "财联社",
-    "column": "finance",
-    "home": "https://www.cls.cn",
-    "color": "red",
-    "interval": 600000,
-    "title": "深度"
-  },
-  "cls-hot": {
-    "name": "财联社",
-    "type": "hottest",
-    "column": "finance",
-    "home": "https://www.cls.cn",
-    "color": "red",
-    "interval": 600000,
-    "title": "热门"
-  },
+
   "xueqiu": {
     "redirect": "xueqiu-hotstock",
     "name": "雪球",
@@ -290,14 +246,7 @@
     "color": "orange",
     "interval": 600000
   },
-  "producthunt": {
-    "name": "Product Hunt",
-    "type": "hottest",
-    "column": "tech",
-    "home": "https://www.producthunt.com/",
-    "color": "red",
-    "interval": 600000
-  },
+
   "github": {
     "redirect": "github-trending-today",
     "name": "Github",

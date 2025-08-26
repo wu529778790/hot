@@ -164,34 +164,9 @@ export const originSources = {
         type: "realtime",
         interval: Time.Fast,
       },
-      windows: {
-        title: "Windows 资源",
-        type: "realtime",
-        interval: Time.Fast,
-        disable: true,
-      },
     },
   },
-  cls: {
-    name: "财联社",
-    color: "red",
-    column: "finance",
-    home: "https://www.cls.cn",
-    sub: {
-      telegraph: {
-        title: "电报",
-        interval: Time.Fast,
-        type: "realtime",
-      },
-      depth: {
-        title: "深度",
-      },
-      hot: {
-        title: "热门",
-        type: "hottest",
-      },
-    },
-  },
+
   xueqiu: {
     name: "雪球",
     color: "blue",
@@ -240,13 +215,7 @@ export const originSources = {
     type: "hottest",
     home: "https://news.ycombinator.com/",
   },
-  producthunt: {
-    name: "Product Hunt",
-    color: "red",
-    column: "tech",
-    type: "hottest",
-    home: "https://www.producthunt.com/",
-  },
+
   github: {
     name: "Github",
     color: "gray",
