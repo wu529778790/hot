@@ -2,6 +2,9 @@ name: Publish Docker Images
 
 on:
   push:
+    branches:
+      - main
+      - master
     tags:
       - "v*"
   workflow_dispatch:
@@ -53,6 +56,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value={{sha}},enable={{is_default_branch}}
 
       - name: Extract metadata for GHCR
         id: meta-ghcr
@@ -66,6 +70,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value={{sha}},enable={{is_default_branch}}
 
       - name: Build and push Docker image to Docker Hub
         uses: docker/build-push-action@v5
@@ -106,24 +111,33 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            ## Docker Images
+            ## 🚀 新版本发布
 
-            ### Docker Hub
+            ### 📦 Docker 镜像
+
+            **Docker Hub:**
             ```bash
             docker pull ${{ env.REGISTRY_DOCKERHUB }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+            docker pull ${{ env.REGISTRY_DOCKERHUB }}/${{ env.IMAGE_NAME }}:latest
             ```
 
-            ### GitHub Container Registry
+            **GitHub Container Registry:**
             ```bash
             docker pull ${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+            docker pull ${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}:latest
             ```
 
-            ## Quick Start
+            ### 🐳 快速开始
 
             ```bash
             docker run -p 3000:3000 ${{ env.REGISTRY_DOCKERHUB }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
             ```
 
-            Visit http://localhost:3000 to access the application.
+            访问 http://localhost:3000 开始使用！
+
+            ### ✨ 新功能
+            - 📸 新增一键分享功能：将热榜卡片复制为精美图片
+            - 🔄 自动发布：每次代码更新都会自动构建和发布 Docker 镜像
+
           draft: false
           prerelease: false
