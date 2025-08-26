@@ -48,6 +48,25 @@
               class="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
           </button>
 
+          <!-- 复制卡片按钮 -->
+          <button
+            class="btn btn-ghost btn-sm btn-circle opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-success/10"
+            @click="copyCardToImage"
+            :disabled="loading"
+            :title="`复制 ${source.name} 卡片`">
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </button>
+
           <button
             class="drag-handle btn btn-ghost btn-sm btn-circle cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-base-300"
             :title="`拖拽调整 ${source.name} 顺序`">
@@ -192,6 +211,7 @@
 
 <script setup>
 import EmptyState from "./EmptyState.vue";
+import html2canvas from "html2canvas";
 
 const props = defineProps({
   source: {
@@ -236,5 +256,227 @@ const formatTime = (date) => {
   if (minutes < 60) return `${minutes}分钟前`;
   if (hours < 24) return `${hours}小时前`;
   return `${days}天前`;
+};
+
+// 创建自定义卡片图片（作为html2canvas的最终备选方案）
+const createCustomCardImage = async (cardElement) => {
+  return new Promise((resolve) => {
+    const rect = cardElement.getBoundingClientRect();
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // 设置canvas尺寸
+    canvas.width = Math.max(400, rect.width * 2); // 最小宽度400px
+    canvas.height = Math.max(300, rect.height * 2);
+    ctx.scale(2, 2);
+
+    const width = canvas.width / 2;
+    const height = canvas.height / 2;
+
+    // 绘制背景
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    // 绘制边框
+    ctx.strokeStyle = "#e5e7eb";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, width, height);
+
+    // 绘制标题区域
+    ctx.fillStyle = "#f9fafb";
+    ctx.fillRect(0, 0, width, 80);
+
+    // 绘制标题文字
+    ctx.fillStyle = "#111827";
+    ctx.font = "bold 16px system-ui, -apple-system, sans-serif";
+    ctx.fillText(props.source.name, 24, 32);
+
+    // 绘制"实时更新"文字
+    ctx.fillStyle = "#6b7280";
+    ctx.font = "12px system-ui, -apple-system, sans-serif";
+    ctx.fillText("实时更新", 24, 52);
+
+    // 绘制内容区域
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 80, width, height - 80);
+
+    // 绘制示例内容
+    ctx.fillStyle = "#374151";
+    ctx.font = "14px system-ui, -apple-system, sans-serif";
+
+    // 安全地访问items
+    const items = (props.items || []).slice(0, 3);
+    items.forEach((item, index) => {
+      const y = 100 + index * 50;
+      const title =
+        item && item.title ? item.title.substring(0, 30) + "..." : "加载中...";
+      ctx.fillText(`${index + 1}. ${title}`, 24, y);
+    });
+
+    resolve(canvas);
+  });
+};
+
+// 创建简单的文本图片（最后的备选方案）
+const createSimpleTextImage = () => {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = 600;
+  canvas.height = 400;
+
+  // 绘制背景
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, 600, 400);
+
+  // 绘制边框
+  ctx.strokeStyle = "#e5e7eb";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(10, 10, 580, 380);
+
+  // 绘制标题
+  ctx.fillStyle = "#111827";
+  ctx.font = "bold 24px system-ui, -apple-system, sans-serif";
+  ctx.fillText(props.source.name + " 热门内容", 30, 50);
+
+  // 绘制时间
+  ctx.fillStyle = "#6b7280";
+  ctx.font = "16px system-ui, -apple-system, sans-serif";
+  ctx.fillText("生成时间: " + new Date().toLocaleString(), 30, 80);
+
+  // 绘制内容
+  ctx.fillStyle = "#374151";
+  ctx.font = "14px system-ui, -apple-system, sans-serif";
+
+  props.items.slice(0, 8).forEach((item, index) => {
+    const y = 120 + index * 30;
+    const title =
+      item.title.length > 40 ? item.title.substring(0, 40) + "..." : item.title;
+    ctx.fillText(`${index + 1}. ${title}`, 30, y);
+  });
+
+  return canvas;
+};
+
+// 复制卡片为图片
+const copyCardToImage = async () => {
+  try {
+    // 获取当前卡片元素
+    const cardElement = document.getElementById(props.source.id);
+
+    if (!cardElement) {
+      throw new Error("未找到卡片元素");
+    }
+
+    // 配置 html2canvas 选项
+    const options = {
+      backgroundColor: "#ffffff", // 使用固定背景色避免颜色解析问题
+      scale: 2, // 提高分辨率
+      useCORS: true,
+      allowTaint: true, // 允许使用外部资源和可能的问题样式
+      logging: false,
+      width: cardElement.scrollWidth,
+      height: cardElement.scrollHeight,
+      scrollX: 0,
+      scrollY: 0,
+      ignoreElements: (element) => {
+        // 忽略可能包含复杂颜色的元素
+        return (
+          element.classList.contains("backdrop-blur") ||
+          element.classList.contains("bg-gradient-to-r")
+        );
+      },
+    };
+
+    // 生成 canvas
+    let canvas;
+    try {
+      canvas = await html2canvas(cardElement, options);
+    } catch (canvasError) {
+      console.warn("html2canvas 失败，尝试降级方案:", canvasError);
+
+      // 降级方案：使用更兼容的配置
+      const fallbackOptions = {
+        backgroundColor: "#ffffff",
+        scale: 1, // 降低分辨率
+        useCORS: false,
+        allowTaint: true,
+        logging: false,
+        width: cardElement.scrollWidth,
+        height: cardElement.scrollHeight,
+        scrollX: 0,
+        scrollY: 0,
+        ignoreElements: () => true, // 忽略所有可能有问题的元素
+      };
+
+      try {
+        canvas = await html2canvas(cardElement, fallbackOptions);
+      } catch (fallbackError) {
+        console.error("降级方案也失败，使用自定义方案:", fallbackError);
+
+        // 最终备选方案：创建自定义canvas
+        canvas = await createCustomCardImage(cardElement);
+
+        if (!canvas) {
+          // 如果自定义方案也失败，创建一个简单的文本图片
+          canvas = createSimpleTextImage();
+        }
+      }
+    }
+
+    // 将 canvas 转换为 blob
+    canvas.toBlob(
+      async (blob) => {
+        if (!blob) {
+          throw new Error("图片生成失败");
+        }
+
+        try {
+          // 创建 ClipboardItem
+          const item = new ClipboardItem({ "image/png": blob });
+
+          // 复制到剪贴板
+          await navigator.clipboard.write([item]);
+
+          // 显示成功提示
+          if (window.$toast) {
+            window.$toast.success(`${props.source.name} 卡片已复制到剪贴板`);
+          } else {
+            alert(`${props.source.name} 卡片已复制到剪贴板`);
+          }
+        } catch (clipboardError) {
+          console.error("复制到剪贴板失败:", clipboardError);
+
+          // 如果剪贴板API不可用，提供下载选项
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${props.source.name}-hot-list-${
+            new Date().toISOString().split("T")[0]
+          }.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          if (window.$toast) {
+            window.$toast.info("图片已下载到本地");
+          } else {
+            alert("图片已下载到本地");
+          }
+        }
+      },
+      "image/png",
+      0.9
+    );
+  } catch (error) {
+    console.error("生成卡片图片失败:", error);
+
+    if (window.$toast) {
+      window.$toast.error("生成图片失败: " + error.message);
+    } else {
+      alert("生成图片失败: " + error.message);
+    }
+  }
 };
 </script>

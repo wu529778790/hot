@@ -17,24 +17,24 @@
           <div>
             <h1
               class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              {{ title || "热榜聚合" }}
+              {{ props.title || "热榜聚合" }}
             </h1>
             <p class="text-xs text-base-content/60">
-              {{ subtitle || "实时聚合各大平台热门内容" }}
+              {{ props.subtitle || "实时聚合各大平台热门内容" }}
             </p>
           </div>
         </div>
 
         <div class="flex items-center space-x-2">
-          <div v-if="showStats" class="text-xs text-base-content/50">
-            共 {{ sourceCount || 0 }} 个数据源
+          <div v-if="props.showStats" class="text-xs text-base-content/50">
+            共 {{ props.sourceCount || 0 }} 个数据源
           </div>
 
           <!-- 刷新按钮 -->
           <button
             class="btn btn-ghost btn-sm btn-circle"
             @click="$emit('refresh')"
-            :title="refreshTitle || '刷新全部'">
+            :title="props.refreshTitle || '刷新全部'">
             <svg
               class="w-4 h-4"
               fill="none"
@@ -87,24 +87,8 @@
 </template>
 
 <script setup>
-// 主题管理
-const currentTheme = ref("light");
-
-const toggleTheme = () => {
-  const newTheme = currentTheme.value === "light" ? "dark" : "light";
-  currentTheme.value = newTheme;
-  document.documentElement.setAttribute("data-theme", newTheme);
-  localStorage.setItem("theme", newTheme);
-};
-
-// 初始化主题
-onMounted(() => {
-  const savedTheme = localStorage.getItem("theme") || "light";
-  currentTheme.value = savedTheme;
-  document.documentElement.setAttribute("data-theme", savedTheme);
-});
-
-defineProps({
+// Props
+const props = defineProps({
   title: {
     type: String,
     default: "热榜聚合",
@@ -125,6 +109,23 @@ defineProps({
     type: String,
     default: "刷新全部",
   },
+});
+
+// 主题管理
+const currentTheme = ref("light");
+
+const toggleTheme = () => {
+  const newTheme = currentTheme.value === "light" ? "dark" : "light";
+  currentTheme.value = newTheme;
+  document.documentElement.setAttribute("data-theme", newTheme);
+  localStorage.setItem("theme", newTheme);
+};
+
+// 初始化主题
+onMounted(() => {
+  const savedTheme = localStorage.getItem("theme") || "light";
+  currentTheme.value = savedTheme;
+  document.documentElement.setAttribute("data-theme", savedTheme);
 });
 
 defineEmits(["refresh"]);

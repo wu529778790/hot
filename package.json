@@ -20,6 +20,7 @@
     "dayjs": "^1.11.13",
     "defu": "^6.1.4",
     "fast-xml-parser": "^5.2.5",
+    "html2canvas": "^1.4.1",
     "iconv-lite": "^0.7.0",
     "md5": "^2.3.0",
     "nuxt": "^4.0.3",
