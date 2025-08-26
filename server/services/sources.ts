@@ -204,11 +204,7 @@ export const sources: Source[] = [
     name: "雪球",
     home: "https://xueqiu.com",
   },
-  {
-    id: "xueqiu-hotstock",
-    name: "雪球-热门股票",
-    home: "https://xueqiu.com",
-  },
+
   {
     id: "zaobao",
     name: "早报",

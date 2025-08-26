@@ -186,7 +186,6 @@
   },
 
   "xueqiu": {
-    "redirect": "xueqiu-hotstock",
     "name": "雪球",
     "type": "hottest",
     "column": "finance",
@@ -195,15 +194,7 @@
     "interval": 120000,
     "title": "热门股票"
   },
-  "xueqiu-hotstock": {
-    "name": "雪球",
-    "type": "hottest",
-    "column": "finance",
-    "home": "https://xueqiu.com",
-    "color": "blue",
-    "interval": 120000,
-    "title": "热门股票"
-  },
+
   "gelonghui": {
     "title": "事件",
     "name": "格隆汇",
