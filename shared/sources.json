@@ -202,14 +202,6 @@
     "color": "teal",
     "interval": 3600000
   },
-  "hackernews": {
-    "name": "Hacker News",
-    "type": "hottest",
-    "column": "tech",
-    "home": "https://news.ycombinator.com/",
-    "color": "orange",
-    "interval": 600000
-  },
 
   "github": {
     "redirect": "github-trending-today",

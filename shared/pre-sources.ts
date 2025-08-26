@@ -203,13 +203,6 @@ export const originSources = {
     home: "https://solidot.org",
     interval: Time.Slow,
   },
-  hackernews: {
-    name: "Hacker News",
-    color: "orange",
-    column: "tech",
-    type: "hottest",
-    home: "https://news.ycombinator.com/",
-  },
 
   github: {
     name: "Github",

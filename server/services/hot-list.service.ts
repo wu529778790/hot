@@ -15,12 +15,11 @@ import getDouyinHotList from "~/server/sources/douyin";
 import getFastbullHotList from "~/server/sources/fastbull";
 import getGelonghuiHotList from "~/server/sources/gelonghui";
 
-import getHackernewsHotList from "~/server/sources/hackernews";
 import getHupuHotList from "~/server/sources/hupu";
 import getIfengHotList from "~/server/sources/ifeng";
 import getJin10HotList from "~/server/sources/jin10";
 import getJuejinHotList from "~/server/sources/juejin";
-import getKaopuHotList from "~/server/sources/kaopu";
+
 import getKuaishouHotList from "~/server/sources/kuaishou";
 
 import getNowcoderHotList from "~/server/sources/nowcoder";
@@ -53,12 +52,11 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   cankaoxiaoxi: getCankaoxiaoxiHotList,
 
   douyin: getDouyinHotList,
-  fastbull: getFastbullHotList.fastbull,
+  fastbull: getFastbullHotList.fastbull!,
 
-  "fastbull-news": getFastbullHotList["fastbull-news"],
+  "fastbull-news": getFastbullHotList["fastbull-news"]!,
   gelonghui: getGelonghuiHotList,
 
-  hackernews: getHackernewsHotList,
   hupu: getHupuHotList,
   ifeng: getIfengHotList,
   jin10: getJin10HotList,
@@ -66,7 +64,7 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   kuaishou: getKuaishouHotList,
 
   nowcoder: getNowcoderHotList,
-  "pcbeta-windows11": getPcbetaHotList["pcbeta-windows11"],
+  "pcbeta-windows11": getPcbetaHotList["pcbeta-windows11"]!,
 
   solidot: getSolidotHotList,
   sputniknewscn: getSputniknewscnHotList,
@@ -75,15 +73,15 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   tieba: getTiebaHotList,
   toutiao: getToutiaoHotList,
 
-  wallstreetcn: getWallstreetcnHotList.wallstreetcn,
+  wallstreetcn: getWallstreetcnHotList.wallstreetcn!,
 
-  "wallstreetcn-news": getWallstreetcnHotList["wallstreetcn-news"],
-  "wallstreetcn-hot": getWallstreetcnHotList["wallstreetcn-hot"],
-  xueqiu: getXueqiuHotList.xueqiu,
+  "wallstreetcn-news": getWallstreetcnHotList["wallstreetcn-news"]!,
+  "wallstreetcn-hot": getWallstreetcnHotList["wallstreetcn-hot"]!,
+  xueqiu: getXueqiuHotList.xueqiu!,
 
   zaobao: getZaobaoHotList,
 
-  coolapk: getCoolapkHotList.coolapk,
+  coolapk: getCoolapkHotList.coolapk!,
 };
 
 export async function getHotList(id: string): Promise<HotItem[]> {

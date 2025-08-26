@@ -1,4 +1,8 @@
-import type { Source } from "~/server/models/hot-item.model";
+interface Source {
+  id: string;
+  name: string;
+  home: string;
+}
 
 export const sources: Source[] = [
   {
@@ -74,11 +78,6 @@ export const sources: Source[] = [
     home: "https://www.gelonghui.com",
   },
 
-  {
-    id: "hackernews",
-    name: "Hacker News",
-    home: "https://news.ycombinator.com",
-  },
   {
     id: "hupu",
     name: "虎扑",
