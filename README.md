@@ -10,68 +10,6 @@
 - 🌙 **个性化主题**：支持深色/浅色模式切换，打造专属您的舒适阅读环境。
 - 🌐 **海量内容源**：覆盖新闻、科技、娱乐、财经等多个领域，满足您的多元化需求。
 
-## 💡 为什么选择热榜？
-
-在信息爆炸的时代，时间宝贵。「热榜」致力于为您节省时间，提升效率。我们不仅提供丰富的内容，更注重您的阅读体验，让您在简洁优雅的界面中，轻松获取最有价值的信息。
-
-## 🐳 Docker 部署
-
-### 使用官方 Docker 镜像
-
-我们提供预构建的 Docker 镜像，您可以轻松部署：
-
-```bash
-# 使用 Docker Hub 镜像
-docker run -p 3000:3000 newshub.shenzjd.com/newshub.shenzjd.com:latest
-
-# 使用 GitHub Container Registry 镜像
-docker run -p 3000:3000 ghcr.io/newshub.shenzjd.com/newshub.shenzjd.com:latest
-```
-
-### 使用特定版本
-
-```bash
-# Docker Hub
-docker run -p 3000:3000 newshub.shenzjd.com/newshub.shenzjd.com:v1.0.0
-
-# GitHub Container Registry
-docker run -p 3000:3000 ghcr.io/newshub.shenzjd.com/newshub.shenzjd.com:v1.0.0
-```
-
-### Docker Compose 部署
-
-创建 `docker-compose.yml` 文件：
-
-```yaml
-version: '3.8'
-services:
-  newshub:
-    image: newshub.shenzjd.com/newshub.shenzjd.com:latest
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-    environment:
-      - NODE_ENV=production
-```
-
-然后运行：
-
-```bash
-docker-compose up -d
-```
-
-### 本地构建 Docker 镜像
-
-如果您想本地构建 Docker 镜像：
-
-```bash
-# 构建镜像
-docker build -t newshub:latest .
-
-# 运行容器
-docker run -p 3000:3000 newshub:latest
-```
-
 ## 🌐 丰富的数据源
 
 「热榜」整合了来自全球的众多热门内容平台，包括但不限于：
@@ -84,9 +22,41 @@ docker run -p 3000:3000 newshub:latest
 - **开发者社区**：稀土掘金、GitHub Trending
 - **其他**：酷安、靠谱新闻、牛客网、虫部落、远景论坛
 
-## 🤝 贡献与交流
+## 🐳 Docker 部署
 
-我们欢迎所有对「热榜」感兴趣的朋友加入，共同打造更出色的产品。如果您有任何建议或想法，欢迎通过 GitHub 提交 Issue 或 Pull Request。
+### 使用官方 Docker 镜像
+
+我们提供预构建的 Docker 镜像，您可以轻松部署：
+
+```bash
+# 使用 Docker Hub 镜像
+docker run -p 3000:3000 wu529778790/newshub.shenzjd.com:latest
+
+# 使用 GitHub Container Registry 镜像
+docker run -p 3000:3000 ghcr.io/wu529778790/newshub.shenzjd.com:latest
+```
+
+### Docker Compose 部署
+
+创建 `docker-compose.yml` 文件：
+
+```yaml
+version: '3.8'
+services:
+  newshub:
+    image: wu529778790/newshub.shenzjd.com:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+```
+
+然后运行：
+
+```bash
+docker-compose up -d
+```
 
 ## 🚀 自动发布
 
