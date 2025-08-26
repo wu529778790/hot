@@ -99,12 +99,12 @@
             ">
             <ol class="list-none space-y-2 max-h-96 overflow-y-auto">
               <li
-                v-for="item in hotItemsBySource[source.id]"
+                v-for="(item, index) in hotItemsBySource[source.id]"
                 :key="item.id"
                 class="flex items-baseline p-1 rounded-md hover:bg-base-300">
                 <span
                   class="text-sm font-medium text-base-content/60 w-8 text-center"
-                  >{{ item.rank }}</span
+                  >{{ item.rank || index + 1 }}</span
                 >
                 <a
                   :href="item.url"
