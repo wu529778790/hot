@@ -51,23 +51,7 @@
     "color": "green",
     "interval": 600000
   },
-  "mktnews": {
-    "redirect": "mktnews-flash",
-    "name": "MKTNews",
-    "column": "finance",
-    "home": "https://mktnews.net",
-    "color": "indigo",
-    "interval": 120000,
-    "title": "快讯"
-  },
-  "mktnews-flash": {
-    "name": "MKTNews",
-    "column": "finance",
-    "home": "https://mktnews.net",
-    "color": "indigo",
-    "interval": 120000,
-    "title": "快讯"
-  },
+
   "wallstreetcn": {
     "redirect": "wallstreetcn-quick",
     "name": "华尔街见闻",

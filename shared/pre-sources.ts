@@ -1,7 +1,7 @@
-import process from "node:process"
-import { Interval } from "./consts"
-import { typeSafeObjectFromEntries } from "./type.util"
-import type { OriginSource, Source, SourceID } from "./types"
+import process from "node:process";
+import { Interval } from "./consts";
+import { typeSafeObjectFromEntries } from "./type.util";
+import type { OriginSource, Source, SourceID } from "./types";
 
 const Time = {
   Test: 1,
@@ -10,10 +10,10 @@ const Time = {
   Default: Interval, // 10min
   Common: 30 * 60 * 1000,
   Slow: 60 * 60 * 1000,
-}
+};
 
 export const originSources = {
-  "v2ex": {
+  v2ex: {
     name: "V2EX",
     color: "slate",
     home: "https://v2ex.com/",
@@ -24,14 +24,14 @@ export const originSources = {
       },
     },
   },
-  "zhihu": {
+  zhihu: {
     name: "知乎",
     type: "hottest",
     column: "china",
     color: "blue",
     home: "https://www.zhihu.com",
   },
-  "weibo": {
+  weibo: {
     name: "微博",
     title: "实时热搜",
     type: "hottest",
@@ -40,7 +40,7 @@ export const originSources = {
     interval: Time.Realtime,
     home: "https://weibo.com",
   },
-  "zaobao": {
+  zaobao: {
     name: "联合早报",
     interval: Time.Common,
     type: "realtime",
@@ -49,7 +49,7 @@ export const originSources = {
     desc: "来自第三方网站: 早晨报",
     home: "https://www.zaobao.com",
   },
-  "coolapk": {
+  coolapk: {
     name: "酷安",
     type: "hottest",
     column: "tech",
@@ -57,19 +57,8 @@ export const originSources = {
     title: "今日最热",
     home: "https://coolapk.com",
   },
-  "mktnews": {
-    name: "MKTNews",
-    column: "finance",
-    home: "https://mktnews.net",
-    color: "indigo",
-    interval: Time.Realtime,
-    sub: {
-      flash: {
-        title: "快讯",
-      },
-    },
-  },
-  "wallstreetcn": {
+
+  wallstreetcn: {
     name: "华尔街见闻",
     color: "blue",
     column: "finance",
@@ -105,14 +94,14 @@ export const originSources = {
       },
     },
   },
-  "douyin": {
+  douyin: {
     name: "抖音",
     type: "hottest",
     column: "china",
     color: "gray",
     home: "https://www.douyin.com",
   },
-  "hupu": {
+  hupu: {
     name: "虎扑",
     home: "https://hupu.com",
     column: "china",
@@ -120,7 +109,7 @@ export const originSources = {
     type: "hottest",
     color: "red",
   },
-  "tieba": {
+  tieba: {
     name: "百度贴吧",
     title: "热议",
     column: "china",
@@ -128,21 +117,21 @@ export const originSources = {
     color: "blue",
     home: "https://tieba.baidu.com",
   },
-  "toutiao": {
+  toutiao: {
     name: "今日头条",
     type: "hottest",
     column: "china",
     color: "red",
     home: "https://www.toutiao.com",
   },
-  "ithome": {
+  ithome: {
     name: "IT之家",
     color: "red",
     column: "tech",
     type: "realtime",
     home: "https://www.ithome.com",
   },
-  "thepaper": {
+  thepaper: {
     name: "澎湃新闻",
     interval: Time.Common,
     type: "hottest",
@@ -151,20 +140,20 @@ export const originSources = {
     color: "gray",
     home: "https://www.thepaper.cn",
   },
-  "sputniknewscn": {
+  sputniknewscn: {
     name: "卫星通讯社",
     color: "orange",
     column: "world",
     home: "https://sputniknews.cn",
   },
-  "cankaoxiaoxi": {
+  cankaoxiaoxi: {
     name: "参考消息",
     color: "red",
     column: "world",
     interval: Time.Common,
     home: "https://china.cankaoxiaoxi.com",
   },
-  "pcbeta": {
+  pcbeta: {
     name: "远景论坛",
     color: "blue",
     column: "tech",
@@ -183,7 +172,7 @@ export const originSources = {
       },
     },
   },
-  "cls": {
+  cls: {
     name: "财联社",
     color: "red",
     column: "finance",
@@ -203,7 +192,7 @@ export const originSources = {
       },
     },
   },
-  "xueqiu": {
+  xueqiu: {
     name: "雪球",
     color: "blue",
     home: "https://xueqiu.com",
@@ -216,7 +205,7 @@ export const originSources = {
       },
     },
   },
-  "gelonghui": {
+  gelonghui: {
     name: "格隆汇",
     color: "blue",
     title: "事件",
@@ -225,7 +214,7 @@ export const originSources = {
     interval: Time.Realtime,
     home: "https://www.gelonghui.com",
   },
-  "fastbull": {
+  fastbull: {
     name: "法布财经",
     color: "emerald",
     home: "https://www.fastbull.cn",
@@ -242,28 +231,28 @@ export const originSources = {
       },
     },
   },
-  "solidot": {
+  solidot: {
     name: "Solidot",
     color: "teal",
     column: "tech",
     home: "https://solidot.org",
     interval: Time.Slow,
   },
-  "hackernews": {
+  hackernews: {
     name: "Hacker News",
     color: "orange",
     column: "tech",
     type: "hottest",
     home: "https://news.ycombinator.com/",
   },
-  "producthunt": {
+  producthunt: {
     name: "Product Hunt",
     color: "red",
     column: "tech",
     type: "hottest",
     home: "https://www.producthunt.com/",
   },
-  "github": {
+  github: {
     name: "Github",
     color: "gray",
     home: "https://github.com/",
@@ -275,7 +264,7 @@ export const originSources = {
       },
     },
   },
-  "bilibili": {
+  bilibili: {
     name: "哔哩哔哩",
     color: "blue",
     home: "https://www.bilibili.com",
@@ -291,7 +280,7 @@ export const originSources = {
         column: "china",
         type: "hottest",
       },
-      "ranking": {
+      ranking: {
         title: "排行榜",
         column: "china",
         disable: "cf",
@@ -300,7 +289,7 @@ export const originSources = {
       },
     },
   },
-  "kuaishou": {
+  kuaishou: {
     name: "快手",
     type: "hottest",
     column: "china",
@@ -309,28 +298,28 @@ export const originSources = {
     disable: "cf",
     home: "https://www.kuaishou.com",
   },
-  "jin10": {
+  jin10: {
     name: "金十数据",
     column: "finance",
     color: "blue",
     type: "realtime",
     home: "https://www.jin10.com",
   },
-  "baidu": {
+  baidu: {
     name: "百度热搜",
     column: "china",
     color: "blue",
     type: "hottest",
     home: "https://www.baidu.com",
   },
-  "ghxi": {
+  ghxi: {
     name: "果核剥壳",
     column: "china",
     color: "yellow",
     home: "https://www.ghxi.com/",
     disable: true,
   },
-  "smzdm": {
+  smzdm: {
     name: "什么值得买",
     column: "china",
     color: "red",
@@ -338,28 +327,28 @@ export const originSources = {
     home: "https://www.smzdm.com",
     disable: true,
   },
-  "nowcoder": {
+  nowcoder: {
     name: "牛客",
     column: "china",
     color: "blue",
     type: "hottest",
     home: "https://www.nowcoder.com",
   },
-  "sspai": {
+  sspai: {
     name: "少数派",
     column: "tech",
     color: "red",
     type: "hottest",
     home: "https://sspai.com",
   },
-  "juejin": {
+  juejin: {
     name: "稀土掘金",
     column: "tech",
     color: "blue",
     type: "hottest",
     home: "https://juejin.cn",
   },
-  "ifeng": {
+  ifeng: {
     name: "凤凰网",
     column: "china",
     color: "red",
@@ -367,7 +356,7 @@ export const originSources = {
     title: "热点资讯",
     home: "https://www.ifeng.com",
   },
-  "chongbuluo": {
+  chongbuluo: {
     name: "虫部落",
     column: "china",
     color: "green",
@@ -386,10 +375,10 @@ export const originSources = {
       },
     },
   },
-} as const satisfies Record<string, OriginSource>
+} as const satisfies Record<string, OriginSource>;
 
 export function genSources() {
-  const _: [SourceID, Source][] = []
+  const _: [SourceID, Source][] = [];
 
   Object.entries(originSources).forEach(([id, source]: [any, OriginSource]) => {
     const parent = {
@@ -401,7 +390,7 @@ export function genSources() {
       home: source.home,
       color: source.color ?? "primary",
       interval: source.interval ?? Time.Default,
-    }
+    };
     if (source.sub && Object.keys(source.sub).length) {
       Object.entries(source.sub).forEach(([subId, subSource], i) => {
         if (i === 0) {
@@ -412,13 +401,13 @@ export function genSources() {
               ...parent,
               ...subSource,
             },
-          ] as [any, Source])
+          ] as [any, Source]);
         }
         _.push([`${id}-${subId}`, { ...parent, ...subSource }] as [
           any,
-          Source,
-        ])
-      })
+          Source
+        ]);
+      });
     } else {
       _.push([
         id,
@@ -426,19 +415,19 @@ export function genSources() {
           title: source.title,
           ...parent,
         },
-      ])
+      ]);
     }
-  })
+  });
 
   return typeSafeObjectFromEntries(
     _.filter(([_, v]) => {
       if (v.disable === "cf" && process.env.CF_PAGES) {
-        return false
+        return false;
       } else if (v.disable === true) {
-        return false
+        return false;
       } else {
-        return true
+        return true;
       }
-    }),
-  )
+    })
+  );
 }
