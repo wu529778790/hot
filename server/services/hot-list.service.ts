@@ -1,4 +1,4 @@
-import { getWeiboHotList } from "~/server/sources/weibo";
+import getWeiboHotList from "~/server/sources/weibo";
 import { getZhihuHotList } from "~/server/sources/zhihu";
 import { get36krHotList } from "~/server/sources/_36kr";
 import { getBaiduHotList } from "~/server/sources/baidu";
@@ -8,7 +8,7 @@ import {
   getBilibiliRanking,
 } from "~/server/sources/bilibili";
 import { getGithubHotList } from "~/server/sources/github";
-import { getIthomeHotList } from "~/server/sources/ithome";
+import getIthomeHotList from "~/server/sources/ithome";
 import getCankaoxiaoxiHotList from "~/server/sources/cankaoxiaoxi";
 
 import getDouyinHotList from "~/server/sources/douyin";
@@ -40,7 +40,7 @@ import getCoolapkHotList from "~/server/sources/coolapk";
 import type { HotItem } from "../models/hot-item.model";
 
 const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
-  weibo: getWeiboHotList,
+  weibo: getWeiboHotList.weibo!,
   zhihu: getZhihuHotList,
   "36kr": get36krHotList,
   baidu: getBaiduHotList,
@@ -48,10 +48,10 @@ const fetcherMap: Record<string, () => Promise<HotItem[]>> = {
   "bilibili-hot-video": getBilibiliHotVideo,
   "bilibili-ranking": getBilibiliRanking,
   github: getGithubHotList,
-  ithome: getIthomeHotList,
+  ithome: getIthomeHotList.ithome!,
   cankaoxiaoxi: getCankaoxiaoxiHotList,
 
-  douyin: getDouyinHotList,
+  douyin: getDouyinHotList.douyin!,
   fastbull: getFastbullHotList.fastbull!,
 
   "fastbull-news": getFastbullHotList["fastbull-news"]!,

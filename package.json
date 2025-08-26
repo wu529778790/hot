@@ -3,6 +3,8 @@
   "version": "0.0.2",
   "type": "module",
   "private": true,
+  "homepage": "https://newshub.shenzjd.com",
+  "author": "shenzjd",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -34,6 +36,7 @@
   "devDependencies": {
     "@nuxt/kit": "^4.0.3",
     "@nuxt/test-utils": "^3.19.2",
+    "@types/md5": "^2.3.5",
     "happy-dom": "^18.0.1",
     "ofetch": "^1.4.1",
     "vitest": "^3.2.4",

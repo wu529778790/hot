@@ -15,5 +15,6 @@ export default defineNuxtConfig({
   },
   alias: {
     "#": resolve(__dirname, "./server"),
+    "@shared": resolve(__dirname, "./shared"),
   },
 });

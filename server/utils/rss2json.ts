@@ -1,4 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
+import { myFetch } from "~/server/utils/fetch";
+import { logger } from "~/server/utils/logger";
 import type { RSSInfo } from "../types";
 
 export async function rss2json(url: string): Promise<RSSInfo | undefined> {
@@ -19,7 +21,7 @@ export async function rss2json(url: string): Promise<RSSInfo | undefined> {
   if (Array.isArray(channel)) channel = channel[0];
 
   if (!channel) {
-    console.error("Invalid RSS feed format:", result);
+    logger.error("Invalid RSS feed format:", result);
     return;
   }
 
