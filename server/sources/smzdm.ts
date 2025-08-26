@@ -1,11 +1,11 @@
-import type { HotItem } from '~/server/models/hot-item.model';
-import { rss2json } from '~/server/utils/rss2json';
+import type { HotItem } from "~/server/models/hot-item.model";
+import { rss2json } from "~/server/utils/rss2json";
 
 export async function getSmzdmHotList(): Promise<HotItem[]> {
-  const rssInfo = await rss2json('http://feed.smzdm.com');
+  const rssInfo = await rss2json("http://feed.smzdm.com");
 
   if (!rssInfo || !rssInfo.items) {
-    console.error('Failed to fetch or parse SMZDM RSS feed.');
+    console.error("Failed to fetch or parse SMZDM RSS feed.");
     return [];
   }
 
@@ -14,10 +14,10 @@ export async function getSmzdmHotList(): Promise<HotItem[]> {
       id: item.id || item.link,
       title: item.title,
       url: item.link,
-      source: 'smzdm',
+      source: "smzdm",
       rank: index + 1,
       score: 0,
-      createdAt: new Date(item.created),
+      createdAt: new Date(item.pubDate || item.published),
       updatedAt: new Date(),
     };
   });
